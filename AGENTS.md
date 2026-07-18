@@ -16,7 +16,9 @@ Plataforma de aprendizaje de inglés con profesores reales, clases individuales 
 
 ## Estado actual
 
-FASE 0 (arquitectura) y FASE 1 (fundaciones: scaffold, auth, roles, migraciones) construidas. Landing de FASE 2 en curso. No avanzar de fase sin revisión del usuario.
+Fases 0-5 construidas: arquitectura, fundaciones (auth + roles + migraciones RLS), landing, área del alumno (onboarding, reserva/cancelación de clases, progreso, materiales, perfil), panel del profesor (agenda, alumnos, notas privadas, disponibilidad) y panel admin (métricas, usuarios/roles, asignación de profesor, clases, planes). Pendiente: Fase 6 (pagos MP/Stripe), Fase 7 (IA), Fase 8 (escala). El usuario aún debe crear el proyecto Supabase y aplicar las 3 migraciones (`docs/03-setup.md`).
+
+Política de clases (en `src/lib/services/policy.ts`): reserva con ≥12 h de anticipación, cancelación gratuita hasta 24 h antes, ventana de reserva de 14 días, clases de 50 min.
 
 ## Stack
 
