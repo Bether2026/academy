@@ -1,0 +1,91 @@
+{
+  "brand": {
+    "name": "Learning to Fly Academy",
+    "tagline": "Aprendé inglés con acompañamiento real, tecnología y un progreso que podés ver."
+  },
+  "nav": {
+    "how": "Cómo funciona",
+    "teachers": "Profesores",
+    "plans": "Planes",
+    "faq": "Preguntas",
+    "login": "Iniciar sesión",
+    "start": "Empezar ahora"
+  },
+  "hero": {
+    "kicker": "Clases individuales · Profesores reales · AR y ES",
+    "title": "El inglés no se estudia.",
+    "titleAccent": "Se despega.",
+    "subtitle": "Un profesor que te conoce, clases uno a uno y un plan que se adapta a tu objetivo. Vas a ver tu progreso en cada clase, no al final del año.",
+    "cta": "Probá tu primera clase",
+    "ctaSecondary": "Ver cómo funciona",
+    "trust": "Sin permanencia · Cancelás cuando quieras · Precios claros"
+  },
+  "how": {
+    "title": "Tu plan de vuelo",
+    "steps": [
+      { "title": "Test de nivel", "body": "Contanos tu objetivo y hacé una evaluación corta. Sabemos de dónde partís: A1 a C2, sin adivinar." },
+      { "title": "Tu profesor", "body": "Te asignamos un profesor según tu nivel, objetivo y horarios. Siempre el mismo: te conoce y te acompaña." },
+      { "title": "Clases 1 a 1", "body": "Clases individuales por videollamada, agendadas en tu zona horaria. Si algo cambia, reprogramás desde la app." },
+      { "title": "Progreso visible", "body": "Después de cada clase tu profesor registra avances por habilidad. Vos ves el mapa completo: qué mejoraste y qué sigue." }
+    ]
+  },
+  "teachers": {
+    "title": "Profesores que acompañan",
+    "body": "No creemos en profesores intercambiables. Cada alumno tiene un profesor asignado que conoce su historia, sus objetivos y su forma de aprender. La tecnología ayuda; la relación enseña."
+  },
+  "plans": {
+    "title": "Planes claros, sin letra chica",
+    "subtitle": "Precio visible, renovación visible, cancelación en un clic desde tu cuenta. Siempre.",
+    "perMonth": "por mes",
+    "classesLabel": "clases individuales",
+    "cta": "Empezar",
+    "features": ["Profesor asignado", "Seguimiento de progreso", "Material incluido", "Reprogramación flexible", "Cancelás cuando quieras"]
+  },
+  "faq": {
+    "title": "Preguntas frecuentes",
+    "items": [
+      { "q": "¿Qué pasa si pierdo una clase?", "a": "Si cancelás con anticipación, la clase se reprograma sin costo. Las políticas exactas están visibles en tu cuenta antes de reservar — sin sorpresas." },
+      { "q": "¿Puedo cambiar de profesor?", "a": "Sí. Desde tu perfil podés solicitar el cambio y te reasignamos sin vueltas. Queremos que encuentres al profesor correcto, no retenerte con el incorrecto." },
+      { "q": "¿Cómo cancelo mi suscripción?", "a": "Desde tu cuenta, en cualquier momento, sin contactar a soporte. Seguís teniendo clases hasta el final del período que ya pagaste." },
+      { "q": "¿Las clases son grabadas o en vivo?", "a": "En vivo, uno a uno con tu profesor, por videollamada. El material y las tareas quedan disponibles en la plataforma." },
+      { "q": "¿En qué moneda pago?", "a": "En Argentina pagás en pesos con Mercado Pago. En España, en euros. El precio que ves es el precio que pagás." }
+    ]
+  },
+  "contact": {
+    "title": "¿Hablamos?",
+    "body": "Si tenés dudas antes de empezar, escribinos y te respondemos en el día.",
+    "cta": "Escribinos"
+  },
+  "footer": {
+    "rights": "Todos los derechos reservados.",
+    "legal": "Legales",
+    "terms": "Términos y condiciones",
+    "privacy": "Privacidad",
+    "cancellation": "Política de cancelación"
+  },
+  "auth": {
+    "loginTitle": "Bienvenido de vuelta",
+    "loginSubtitle": "Tu próxima clase te espera.",
+    "registerTitle": "Creá tu cuenta",
+    "registerSubtitle": "En dos minutos estás eligiendo horario para tu primera clase.",
+    "email": "Email",
+    "password": "Contraseña",
+    "firstName": "Nombre",
+    "lastName": "Apellido",
+    "country": "País",
+    "argentina": "Argentina",
+    "spain": "España",
+    "loginCta": "Iniciar sesión",
+    "registerCta": "Crear cuenta",
+    "forgot": "¿Olvidaste tu contraseña?",
+    "forgotTitle": "Recuperar contraseña",
+    "forgotSubtitle": "Te enviamos un enlace para crear una nueva.",
+    "forgotCta": "Enviar enlace",
+    "resetTitle": "Nueva contraseña",
+    "resetSubtitle": "Elegí una contraseña nueva para tu cuenta.",
+    "resetCta": "Guardar contraseña",
+    "noAccount": "¿No tenés cuenta?",
+    "hasAccount": "¿Ya tenés cuenta?",
+    "signOut": "Cerrar sesión"
+  }
+}
