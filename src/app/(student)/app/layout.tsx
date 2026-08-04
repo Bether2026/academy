@@ -6,6 +6,9 @@ const NAV = [
   { href: "/app/clases", label: "Mis clases" },
   { href: "/app/progreso", label: "Progreso" },
   { href: "/app/materiales", label: "Materiales" },
+  { href: "/app/practica", label: "Práctica IA" },
+  { href: "/app/suscripcion", label: "Suscripción" },
+  { href: "/app/certificado", label: "Certificado" },
   { href: "/app/perfil", label: "Perfil" },
 ];
 

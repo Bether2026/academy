@@ -1,0 +1,40 @@
+{
+  "brand": {
+    "name": "Learning to Fly Academy",
+    "tagline": "Learn English with real teachers, technology, and progress you can see."
+  },
+  "nav": {
+    "how": "How it works",
+    "teachers": "Teachers",
+    "plans": "Plans",
+    "faq": "FAQ",
+    "login": "Log in",
+    "start": "Get started"
+  },
+  "hero": {
+    "kicker": "1-on-1 classes · Real teachers · AR & ES",
+    "title": "English isn't studied.",
+    "titleAccent": "It takes off.",
+    "subtitle": "A teacher who knows you, one-on-one classes and a plan that adapts to your goal. You'll see your progress in every class, not at year's end.",
+    "cta": "Try your first class",
+    "ctaSecondary": "See how it works",
+    "trust": "No commitments · Cancel anytime · Clear pricing"
+  },
+  "auth": {
+    "loginTitle": "Welcome back",
+    "loginSubtitle": "Your next class is waiting.",
+    "registerTitle": "Create your account",
+    "registerSubtitle": "In two minutes you'll be choosing a time for your first class.",
+    "email": "Email",
+    "password": "Password",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "country": "Country",
+    "argentina": "Argentina",
+    "spain": "Spain",
+    "loginCta": "Log in",
+    "registerCta": "Create account",
+    "forgot": "Forgot your password?",
+    "signOut": "Sign out"
+  }
+}

@@ -16,13 +16,30 @@ Plataforma de aprendizaje de inglés con profesores reales, clases individuales 
 
 ## Estado actual
 
-Fases 0-5 construidas: arquitectura, fundaciones (auth + roles + migraciones RLS), landing, área del alumno (onboarding, reserva/cancelación de clases, progreso, materiales, perfil), panel del profesor (agenda, alumnos, notas privadas, disponibilidad) y panel admin (métricas, usuarios/roles, asignación de profesor, clases, planes). Pendiente: Fase 6 (pagos MP/Stripe), Fase 7 (IA), Fase 8 (escala). El usuario aún debe crear el proyecto Supabase y aplicar las 3 migraciones (`docs/03-setup.md`).
+**Plataforma completa — Fases 0-8 implementadas.**
+
+- **Fase 0-1**: Arquitectura, migraciones Supabase con RLS completo (3 archivos SQL).
+- **Fase 2**: Auth completa con roles (student, teacher, admin, super_admin), JWT sync, proxy/middleware.
+- **Fase 3**: Área del alumno — onboarding, reserva/cancelación de clases, progreso, materiales, perfil.
+- **Fase 4**: Panel del profesor — agenda, alumnos, notas privadas, disponibilidad.
+- **Fase 5**: Panel admin — métricas, usuarios/roles, asignación de profesor, clases, planes.
+- **Fase 6**: Pagos — MercadoPago (AR) y Stripe (ES) vía interfaz `PaymentProvider`; webhooks idempotentes; página de suscripción con alta, cancelación e historial de pagos.
+- **Fase 7**: IA — chat de práctica conversacional con Claude (`claude-opus-4-8`, streaming); tutor adaptado al nivel CEFR del alumno.
+- **Fase 8**: Escala — certificado de progreso (umbral 20 clases), sitemap.xml, robots.txt, traducciones en inglés.
+
+**El usuario debe:**
+1. Crear el proyecto Supabase y aplicar las 3 migraciones (`docs/03-setup.md`).
+2. Completar `.env.local` con las claves de Supabase, MercadoPago, Stripe y Anthropic (ver `.env.example`).
+3. En Stripe, configurar el webhook apuntando a `/api/webhooks/stripe` con los eventos: `checkout.session.completed`, `invoice.payment_succeeded`, `customer.subscription.updated`, `customer.subscription.deleted`.
+4. En MercadoPago, configurar el webhook apuntando a `/api/webhooks/mercadopago`.
+
+Política de clases (en `src/lib/services/policy.ts`): reserva con ≥12 h de anticipación, cancelación gratuita hasta 24 h antes, ventana de reserva de 14 días, clases de 50 min.
 
 Política de clases (en `src/lib/services/policy.ts`): reserva con ≥12 h de anticipación, cancelación gratuita hasta 24 h antes, ventana de reserva de 14 días, clases de 50 min.
 
 ## Stack
 
-Next.js (App Router) + TypeScript strict + Tailwind v4 + shadcn/ui + Supabase (Postgres/Auth/RLS/Storage) + Vercel. Validación con Zod (esquemas compartidos en `src/lib/validators/`). Pagos futuros: Mercado Pago (AR) y Stripe (ES) detrás de la interfaz `PaymentProvider`.
+Next.js 16 (App Router) + TypeScript strict + Tailwind v4 + shadcn/ui (Base UI) + Supabase (Postgres/Auth/RLS/Storage) + Vercel. Validación con Zod (`src/lib/validators/`). Pagos: MercadoPago (AR, REST API) y Stripe (ES, SDK v22, API `2026-07-29.dahlia`) detrás de `PaymentProvider` (`src/lib/services/payments/`). IA: Anthropic SDK `@anthropic-ai/sdk`, modelo `claude-opus-4-8`, streaming.
 
 ## Reglas de trabajo
 

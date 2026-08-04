@@ -63,6 +63,62 @@
     "privacy": "Privacidad",
     "cancellation": "Política de cancelación"
   },
+  "subscription": {
+    "title": "Mi suscripción",
+    "subtitle": "Tu plan, renovación y forma de pago — sin letra chica.",
+    "status": {
+      "active": "Activa",
+      "trial": "Período de prueba",
+      "past_due": "Pago pendiente",
+      "cancelled": "Cancelada",
+      "expired": "Expirada"
+    },
+    "noSubscription": "No tenés una suscripción activa. Elegí el plan que más te convenga:",
+    "cancelBtn": "Cancelar suscripción",
+    "cancelNote": "Seguís teniendo acceso hasta el final del período actual. Sin cargos adicionales.",
+    "cancelSuccess": "Tu suscripción se canceló. Seguís con acceso completo hasta el final del período.",
+    "cancellingMsg": "Tu suscripción se cancela el {date}. Seguís con acceso completo hasta esa fecha.",
+    "nextRenewal": "Próxima renovación",
+    "accessUntil": "Acceso hasta",
+    "currentPeriod": "Período actual",
+    "classesIncluded": "Clases incluidas",
+    "lastPayments": "Últimos pagos",
+    "paymentOk": "¡Suscripción activada exitosamente!",
+    "paymentPending": "¡Pago recibido! Tu suscripción se activa en minutos.",
+    "checkoutBtn": "Suscribirme"
+  },
+  "practice": {
+    "title": "Práctica de conversación",
+    "subtitle": "Practicá inglés en tiempo real con tu asistente IA.",
+    "sendBtn": "Enviar",
+    "newBtn": "Nueva",
+    "hint": "Shift+Enter para nueva línea · Enter para enviar",
+    "placeholder": "Write in English… (Enter to send)",
+    "tipsTitle": "Cómo aprovechar la práctica",
+    "tips": [
+      "Escribí en inglés, sin miedo a equivocarte.",
+      "El tutor corregirá tus errores de forma constructiva.",
+      "Pedile que te explique gramática, vocabulario o pronunciación.",
+      "Practicá situaciones reales: trabajo, viajes, entrevistas.",
+      "Usá 'Nueva conversación' para cambiar de tema."
+    ],
+    "disclaimer": "Esta práctica complementa tus clases. No reemplaza la interacción humana."
+  },
+  "certificate": {
+    "title": "Certificado de progreso",
+    "subtitle": "Completá {n} clases para obtener tu certificado.",
+    "classesCompleted": "clases completadas",
+    "bookNextClass": "Reservar mi próxima clase",
+    "congratsTitle": "Tu certificado",
+    "congratsSubtitle": "¡Felicitaciones! Lo lograste.",
+    "printBtn": "Imprimir / PDF",
+    "certifies": "Certifica que",
+    "certBody": "ha completado satisfactoriamente {n} clases individuales de inglés en Learning to Fly Academy.",
+    "levelReached": "Nivel alcanzado",
+    "issuedBy": "Learning to Fly Academy",
+    "issuedBySubtitle": "Plataforma de inglés online",
+    "issueDate": "Fecha de emisión"
+  },
   "auth": {
     "loginTitle": "Bienvenido de vuelta",
     "loginSubtitle": "Tu próxima clase te espera.",
