@@ -129,3 +129,75 @@
     @apply font-sans;
   }
 }
+
+/* ── Landing animations ──────────────────────────────────────────── */
+@keyframes blob-1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(50px, -40px) scale(1.08); }
+  66%       { transform: translate(-25px, 25px) scale(0.94); }
+}
+@keyframes blob-2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(-40px, 30px) scale(1.06); }
+  66%       { transform: translate(35px, -20px) scale(0.96); }
+}
+@keyframes blob-3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(25px, 35px) scale(1.04); }
+  66%       { transform: translate(-35px, -12px) scale(1.07); }
+}
+@keyframes draw-trail {
+  from { stroke-dashoffset: 820; }
+  to   { stroke-dashoffset: 0; }
+}
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes gradient-border {
+  0%, 100% { background-position: 0% 50%; }
+  50%       { background-position: 100% 50%; }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-6px); }
+}
+
+.animate-blob-1 { animation: blob-1 15s ease-in-out infinite; }
+.animate-blob-2 { animation: blob-2 18s ease-in-out infinite 2s; }
+.animate-blob-3 { animation: blob-3 13s ease-in-out infinite 4s; }
+.animate-draw-trail { animation: draw-trail 2s ease-out 0.6s both; }
+.animate-fade-up-0 { animation: fade-up 0.6s ease-out 0.1s both; }
+.animate-fade-up-1 { animation: fade-up 0.6s ease-out 0.25s both; }
+.animate-fade-up-2 { animation: fade-up 0.6s ease-out 0.4s both; }
+.animate-fade-up-3 { animation: fade-up 0.6s ease-out 0.55s both; }
+.animate-fade-up-4 { animation: fade-up 0.6s ease-out 0.7s both; }
+.animate-fade-in   { animation: fade-in 0.8s ease-out 0.2s both; }
+.animate-float     { animation: float 4s ease-in-out infinite; }
+
+.plan-card-glow::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, #38bdf8, #f59e0b, #7dd3fc, #f59e0b);
+  background-size: 300% 300%;
+  animation: gradient-border 4s ease infinite;
+  z-index: -1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-blob-1, .animate-blob-2, .animate-blob-3,
+  .animate-draw-trail, .animate-float,
+  .plan-card-glow::before { animation: none !important; }
+  .animate-fade-up-0, .animate-fade-up-1, .animate-fade-up-2,
+  .animate-fade-up-3, .animate-fade-up-4, .animate-fade-in {
+    animation: none !important;
+    opacity: 1;
+    transform: none;
+  }
+}
