@@ -191,13 +191,29 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .animate-blob-1, .animate-blob-2, .animate-blob-3,
-  .animate-draw-trail, .animate-float,
-  .plan-card-glow::before { animation: none !important; }
+  /* Detener todas las animaciones y transiciones */
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+
+  /* Los fade-up empiezan invisibles con animation-fill-mode:both — hacerlos visibles */
   .animate-fade-up-0, .animate-fade-up-1, .animate-fade-up-2,
   .animate-fade-up-3, .animate-fade-up-4, .animate-fade-in {
-    animation: none !important;
-    opacity: 1;
-    transform: none;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  /* El trail SVG empieza en dashoffset 820 (invisible) — mostrarlo completo */
+  .animate-draw-trail {
+    stroke-dashoffset: 0 !important;
+  }
+
+  /* El borde gradiente del plan destacado: mostrar gradiente estático en vez de animado */
+  .plan-card-glow::before {
+    background-position: 50% 50% !important;
   }
 }
