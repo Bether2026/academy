@@ -142,6 +142,8 @@
     "resetCta": "Guardar contraseña",
     "noAccount": "¿No tenés cuenta?",
     "hasAccount": "¿Ya tenés cuenta?",
-    "signOut": "Cerrar sesión"
+    "signOut": "Cerrar sesión",
+    "backHome": "Volver al inicio",
+    "panelTitle": "Tu inglés, listo para despegar."
   }
 }

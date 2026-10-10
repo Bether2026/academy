@@ -35,6 +35,8 @@
     "loginCta": "Log in",
     "registerCta": "Create account",
     "forgot": "Forgot your password?",
-    "signOut": "Sign out"
+    "signOut": "Sign out",
+    "backHome": "Back to home",
+    "panelTitle": "Your English, cleared for takeoff."
   }
 }
