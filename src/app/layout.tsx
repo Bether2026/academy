@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, Cinzel, Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -30,6 +30,16 @@ export const metadata: Metadata = {
   },
   description:
     "Clases individuales de inglés online con profesores reales, seguimiento personalizado y progreso que podés ver. Para Argentina y España.",
+  appleWebApp: {
+    capable: true,
+    title: "Learning to Fly",
+    statusBarStyle: "black-translucent",
+  },
+};
+
+// Color de la barra del sistema y de la app instalada (medianoche de la marca)
+export const viewport: Viewport = {
+  themeColor: "#0b1a38",
 };
 
 export default function RootLayout({
