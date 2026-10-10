@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { LogoEmblem } from "@/components/brand/logo";
 import {
   Accordion,
   AccordionContent,
@@ -38,11 +39,6 @@ function AnimatedFlightPath() {
         strokeDasharray="1 12"
         opacity="0.3"
       />
-      {/* Plane at end of trail */}
-      <g className="animate-fade-in" style={{ transformOrigin: "580px 8px" }}>
-        <path d="M580 8 522 40l24 4L580 8Z" fill="#7dd3fc" />
-        <path d="M580 8 546 44l4 20 10-16L580 8Z" fill="#38bdf8" fillOpacity="0.85" />
-      </g>
     </svg>
   );
 }
@@ -78,6 +74,11 @@ export default async function HomePage() {
 
         {/* Content */}
         <div className="relative z-10 mx-auto w-full max-w-6xl px-4 pb-28 pt-12 sm:pt-16 lg:pb-40">
+          <LogoEmblem
+            interactive
+            className="animate-fade-in absolute right-0 top-6 hidden w-[400px] lg:block xl:w-[440px]"
+          />
+
           <div className="animate-fade-up-0">
             <Badge
               variant="outline"

@@ -2,7 +2,7 @@ import { requireRole } from "@/lib/auth/session";
 import { getCertificateEligibility, CLASSES_REQUIRED } from "@/lib/services/certificates";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Logo } from "@/components/brand/logo";
+import { LogoEmblem } from "@/components/brand/logo";
 import Link from "next/link";
 
 export default async function CertificadoPage() {
@@ -54,7 +54,7 @@ export default async function CertificadoPage() {
       {/* Certificate */}
       <div className="print:shadow-none rounded-2xl border-2 border-sky-300 bg-white p-8 sm:p-12 text-center space-y-6 shadow-xl">
         <div className="flex justify-center">
-          <Logo className="h-12 w-auto" />
+          <LogoEmblem framed className="w-44" />
         </div>
 
         <div className="space-y-1">
