@@ -25,7 +25,7 @@ npm install
 Opción A — SQL Editor del dashboard (rápido para arrancar):
 
 1. Abrir **SQL Editor** en el dashboard.
-2. Ejecutar en orden: `supabase/migrations/0001_identity.sql`, luego `0002_domain.sql`, luego `supabase/seed.sql`.
+2. Ejecutar en orden: `supabase/migrations/0001_identity.sql`, luego `0002_domain.sql`, luego `0003_guards.sql`, luego `supabase/seed.sql`.
 
 Opción B — Supabase CLI (recomendado a mediano plazo):
 

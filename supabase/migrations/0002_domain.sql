@@ -60,11 +60,16 @@ create table public.classes (
 create index classes_student_idx  on public.classes (student_id, scheduled_at);
 create index classes_teacher_idx  on public.classes (teacher_id, scheduled_at);
 
+-- Wrapper IMMUTABLE necesario para usar tstzrange en un índice de exclusión
+create or replace function public.class_tstzrange(starts_at timestamptz, mins int)
+returns tstzrange language sql immutable
+as $$ select tstzrange(starts_at, starts_at + mins * interval '1 minute') $$;
+
 -- Garantía física contra doble reserva de un profesor
 alter table public.classes add constraint no_teacher_overlap
   exclude using gist (
     teacher_id with =,
-    tstzrange(scheduled_at, scheduled_at + make_interval(mins => duration_minutes)) with &&
+    public.class_tstzrange(scheduled_at, duration_minutes) with &&
   ) where (status in ('scheduled','confirmed'));
 
 create table public.teacher_availability (
