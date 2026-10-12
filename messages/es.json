@@ -39,7 +39,14 @@
     "perMonth": "por mes",
     "classesLabel": "clases individuales",
     "cta": "Empezar",
-    "features": ["Profesor asignado", "Seguimiento de progreso", "Material incluido", "Reprogramación flexible", "Cancelás cuando quieras"]
+    "features": ["Profesor asignado", "Seguimiento de progreso", "Material incluido", "Reprogramación flexible", "Cancelás cuando quieras"],
+    "categories": { "adults": "Adultos", "kids": "Kids", "exam": "Exámenes internacionales" },
+    "examPicker": "Elegí tu examen",
+    "oncePerWeek": "1 vez por semana",
+    "timesPerWeek": "veces por semana",
+    "cambridge": "Preparación Cambridge",
+    "recommended": "Recomendado",
+    "empty": "Muy pronto vas a ver los precios acá."
   },
   "faq": {
     "title": "Preguntas frecuentes",

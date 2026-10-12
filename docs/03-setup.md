@@ -25,7 +25,7 @@ npm install
 Opción A — SQL Editor del dashboard (rápido para arrancar):
 
 1. Abrir **SQL Editor** en el dashboard.
-2. Ejecutar en orden: `supabase/migrations/0001_identity.sql`, luego `0002_domain.sql`, luego `0003_guards.sql`, luego `supabase/seed.sql`.
+2. Ejecutar en orden: `supabase/migrations/0001_identity.sql`, luego `0002_domain.sql`, luego `0003_guards.sql`, luego `0004_plan_catalog.sql`, luego `supabase/seed.sql`.
 
 Opción B — Supabase CLI (recomendado a mediano plazo):
 
@@ -60,5 +60,5 @@ El trigger sincroniza el rol al JWT; el usuario debe cerrar sesión y volver a e
 
 ## Notas
 
-- Sin `.env.local`, la app igual levanta y muestra la landing (con planes de fallback); login/registro requieren Supabase configurado.
-- La landing lee los planes de la tabla `plans`; si la DB no responde usa los valores espejo de `src/lib/services/plans.ts` (mantener sincronizados con `supabase/seed.sql`).
+- Sin `.env.local`, la app igual levanta y muestra la landing (sin precios); login/registro requieren Supabase configurado.
+- La landing lee los planes de la tabla `plans` (catálogo cargado por `0004_plan_catalog.sql`). Los precios en ARS se actualizan a mano desde **Admin → Planes**.

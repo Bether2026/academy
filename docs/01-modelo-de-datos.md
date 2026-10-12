@@ -176,7 +176,10 @@ alter table classes add constraint no_teacher_overlap
 | `price` | numeric(10,2) | |
 | `currency` | char(3) | `ARS` / `EUR` — un plan por moneda |
 | `billing_interval` | billing_interval | |
-| `classes_per_period` | int | |
+| `classes_per_period` | int | `sessions_per_week × 4` |
+| `category` | plan_category | `adults` / `kids` / `exam` (0004) |
+| `track` | text | examen o programa: `B1`…`C2`, `IELTS`, `APTIS`, `CAMBRIDGE`; null en clases generales |
+| `sessions_per_week` | smallint | 1–7 |
 | `is_active` | boolean | los planes no se borran, se desactivan (los históricos los referencian) |
 | `created_at`, `updated_at` | | |
 

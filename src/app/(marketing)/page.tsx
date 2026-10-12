@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { LogoEmblem } from "@/components/brand/logo";
 import {
@@ -10,7 +9,8 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { t } from "@/lib/i18n";
-import { formatPrice, getPublicPlans } from "@/lib/services/plans";
+import { getPublicPlans } from "@/lib/services/plans";
+import { PlansExplorer } from "@/components/features/plans-explorer";
 
 function AnimatedFlightPath() {
   return (
@@ -206,73 +206,7 @@ export default async function HomePage() {
           <p className="mt-2 text-muted-foreground">{t.plans.subtitle}</p>
         </div>
 
-        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:max-w-3xl">
-          {plans.map((plan) => (
-            <div
-              key={plan.name}
-              className={`relative rounded-2xl ${plan.highlighted ? "plan-card-glow" : ""}`}
-            >
-              <Card
-                className={`relative h-full overflow-hidden rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${
-                  plan.highlighted
-                    ? "border-0 shadow-lg shadow-sky-200/50"
-                    : "hover:border-sky-200 hover:shadow-sky-50"
-                }`}
-              >
-                {plan.highlighted && (
-                  <div className="absolute inset-x-0 top-0 h-px"
-                    style={{ background: "linear-gradient(90deg, transparent, #38bdf8, #f59e0b, transparent)" }} />
-                )}
-                <CardHeader className="pb-3">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="font-heading text-xl">{plan.name}</CardTitle>
-                    {plan.highlighted && (
-                      <Badge className="bg-sky-500 text-white hover:bg-sky-500 text-xs">
-                        Recomendado
-                      </Badge>
-                    )}
-                  </div>
-                  {plan.description && (
-                    <p className="text-sm text-muted-foreground">{plan.description}</p>
-                  )}
-                </CardHeader>
-                <CardContent className="space-y-5">
-                  <div>
-                    {plan.prices.map((price) => (
-                      <p key={price.currency} className="font-heading text-3xl font-bold">
-                        {formatPrice(price.currency, price.amount)}
-                        <span className="ml-1.5 text-sm font-normal text-muted-foreground">
-                          {price.currency} {t.plans.perMonth}
-                        </span>
-                      </p>
-                    ))}
-                    <p className="mt-1 text-sm font-medium text-sky-600">
-                      {plan.classesPerPeriod} {t.plans.classesLabel}
-                    </p>
-                  </div>
-                  <ul className="space-y-2 text-sm text-muted-foreground">
-                    {t.plans.features.map((feature) => (
-                      <li key={feature} className="flex items-center gap-2.5">
-                        <span className="flex h-4 w-4 items-center justify-center rounded-full bg-sky-100 text-sky-600 text-[10px] font-bold shrink-0">✓</span>
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                  <Button
-                    className={`w-full font-semibold transition-all hover:-translate-y-0.5 ${
-                      plan.highlighted
-                        ? "shadow-md shadow-sky-200"
-                        : ""
-                    }`}
-                    render={<Link href="/register" />}
-                  >
-                    {t.plans.cta}
-                  </Button>
-                </CardContent>
-              </Card>
-            </div>
-          ))}
-        </div>
+        <PlansExplorer plans={plans} />
       </section>
 
       {/* ── FAQ ──────────────────────────────────────────────────── */}

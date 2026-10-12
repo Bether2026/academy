@@ -39,6 +39,9 @@ export type PlanRecord = {
   currency: string;
   billing_interval: string;
   classes_per_period: number;
+  category: "adults" | "kids" | "exam";
+  track: string | null;
+  sessions_per_week: number | null;
   is_active: boolean;
 };
 
@@ -74,10 +77,14 @@ export async function getAvailablePlans(country: string): Promise<PlanRecord[]> 
   const currency = country === "ES" ? "EUR" : "ARS";
   const { data } = await supabase
     .from("plans")
-    .select("id, name, description, price, currency, billing_interval, classes_per_period, is_active")
+    .select(
+      "id, name, description, price, currency, billing_interval, classes_per_period, category, track, sessions_per_week, is_active",
+    )
     .eq("is_active", true)
     .eq("currency", currency)
-    .order("price");
+    .order("category")
+    .order("track")
+    .order("sessions_per_week");
   return (data ?? []) as PlanRecord[];
 }
 
