@@ -82,15 +82,80 @@ export async function getAvailableSlots(
   return slots.sort((a, b) => a.startUtc.localeCompare(b.startUtc));
 }
 
+/** Estados de suscripción que habilitan reservar (past_due = pago fallido: no). */
+const BOOKABLE_SUBSCRIPTION = ["active", "trial"];
+/** Clases que consumen cupo: todo lo reservado menos las canceladas a tiempo. */
+const QUOTA_STATUSES = ["scheduled", "confirmed", "completed", "no_show"];
+
+type QuotaWindow = { start: Date; end: Date; limit: number; used: number };
+
 /**
- * Reserva una clase. Valida en servidor; la restricción de exclusión en
- * Postgres es la garantía final contra carreras.
+ * Cupo de clases del alumno según su plan. Las clases cuentan en el período
+ * en el que caen: el actual, o el siguiente si la suscripción se renueva.
+ */
+export type BookingAllowance =
+  | { ok: false }
+  | { ok: true; current: QuotaWindow; next: QuotaWindow | null };
+
+export async function getBookingAllowance(studentId: string): Promise<BookingAllowance> {
+  const admin = createAdminClient();
+  const { data: sub } = await admin
+    .from("subscriptions")
+    .select("current_period_start, current_period_end, cancel_at_period_end, plan:plans(classes_per_period)")
+    .eq("student_id", studentId)
+    .in("status", BOOKABLE_SUBSCRIPTION)
+    .gt("current_period_end", new Date().toISOString())
+    .order("current_period_end", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (!sub) return { ok: false };
+
+  const limit = (sub.plan as unknown as { classes_per_period: number }).classes_per_period;
+  const start = new Date(sub.current_period_start);
+  const end = new Date(sub.current_period_end);
+  // el período siguiente dura lo mismo que el actual
+  const nextEnd = new Date(end.getTime() + (end.getTime() - start.getTime()));
+
+  const { data: taken } = await admin
+    .from("classes")
+    .select("scheduled_at, status, cancellation_reason")
+    .eq("student_id", studentId)
+    .gte("scheduled_at", start.toISOString())
+    .lt("scheduled_at", nextEnd.toISOString());
+
+  // las cancelaciones tardías (< 24 h) también consumen la clase
+  const counted = (taken ?? []).filter(
+    (c) => QUOTA_STATUSES.includes(c.status) || c.cancellation_reason === "late_cancellation",
+  );
+  const usedIn = (from: Date, to: Date) =>
+    counted.filter((c) => {
+      const t = new Date(c.scheduled_at);
+      return t >= from && t < to;
+    }).length;
+
+  return {
+    ok: true,
+    current: { start, end, limit, used: usedIn(start, end) },
+    next: sub.cancel_at_period_end ? null : { start: end, end: nextEnd, limit, used: usedIn(end, nextEnd) },
+  };
+}
+
+/** ¿El alumno puede reservar una clase que empieza en `at`? */
+export function quotaAllows(allowance: BookingAllowance, at: Date): boolean {
+  if (!allowance.ok) return false;
+  const w = [allowance.current, allowance.next].find((w) => w && at >= w.start && at < w.end);
+  return !!w && w.used < w.limit;
+}
+
+/**
+ * Reserva una clase. Valida en servidor plan, cupo y disponibilidad; la
+ * restricción de exclusión en Postgres es la garantía final contra carreras.
  */
 export async function bookClass(params: {
   studentId: string;
   teacherId: string;
   startUtc: string;
-}): Promise<{ ok: true } | { ok: false; error: string }> {
+}): Promise<{ ok: true; classId: string } | { ok: false; error: string }> {
   const start = new Date(params.startUtc);
   if (Number.isNaN(start.getTime())) return { ok: false, error: "Horario inválido." };
   if (isBefore(start, addMinutes(new Date(), CLASS_POLICY.minBookingLeadHours * 60))) {
@@ -102,29 +167,54 @@ export async function bookClass(params: {
 
   const admin = createAdminClient();
 
-  // El turno debe seguir estando dentro de la disponibilidad ofrecida
   const { data: student } = await admin
     .from("students")
-    .select("assigned_teacher_id, profiles:profile_id(timezone)")
+    .select("assigned_teacher_id")
     .eq("id", params.studentId)
     .single();
   if (!student || student.assigned_teacher_id !== params.teacherId) {
     return { ok: false, error: "Solo podés reservar con tu profesor asignado." };
   }
 
-  const { error } = await admin.from("classes").insert({
-    student_id: params.studentId,
-    teacher_id: params.teacherId,
-    scheduled_at: start.toISOString(),
-    duration_minutes: CLASS_POLICY.classDurationMinutes,
-    status: "scheduled",
-  });
+  // El turno tiene que ser uno de los ofrecidos (franja del profesor, libre, dentro de la ventana)
+  const offered = await getAvailableSlots(params.teacherId, "UTC");
+  if (!offered.some((s) => s.startUtc === start.toISOString())) {
+    return { ok: false, error: "Ese horario no está disponible. Elegí otro." };
+  }
 
-  if (error) {
-    if (error.code === "23P01") return { ok: false, error: "Ese turno acaba de ocuparse. Elegí otro." };
+  const allowance = await getBookingAllowance(params.studentId);
+  if (!allowance.ok) {
+    return { ok: false, error: "Necesitás un plan activo para reservar clases." };
+  }
+  if (!quotaAllows(allowance, start)) {
+    return { ok: false, error: "Ya usaste todas las clases de tu plan para ese período." };
+  }
+
+  // La sala fija del profesor se copia a la clase (él puede cambiarla después)
+  const { data: teacher } = await admin
+    .from("teachers")
+    .select("meeting_url")
+    .eq("id", params.teacherId)
+    .single();
+
+  const { data: created, error } = await admin
+    .from("classes")
+    .insert({
+      student_id: params.studentId,
+      teacher_id: params.teacherId,
+      scheduled_at: start.toISOString(),
+      duration_minutes: CLASS_POLICY.classDurationMinutes,
+      status: "scheduled",
+      meeting_url: teacher?.meeting_url ?? null,
+    })
+    .select("id")
+    .single();
+
+  if (error || !created) {
+    if (error?.code === "23P01") return { ok: false, error: "Ese turno acaba de ocuparse. Elegí otro." };
     return { ok: false, error: "No pudimos reservar la clase. Probá de nuevo." };
   }
-  return { ok: true };
+  return { ok: true, classId: created.id };
 }
 
 /** Cancela una clase aplicando la política de 24 h. */

@@ -3,7 +3,8 @@ import Link from "next/link";
 import { requireRole } from "@/lib/auth/session";
 import { createClient } from "@/lib/supabase/server";
 import { requireOnboardedStudent } from "@/lib/services/students";
-import { getAvailableSlots } from "@/lib/services/scheduling";
+import { getAvailableSlots, getBookingAllowance, quotaAllows } from "@/lib/services/scheduling";
+import { fmtInTz } from "@/lib/utils/dates";
 import { CLASS_POLICY } from "@/lib/services/policy";
 import { SlotPicker } from "./slot-picker";
 
@@ -35,7 +36,28 @@ export default async function BookPage() {
     );
   }
 
-  const slots = await getAvailableSlots(student.assigned_teacher_id, tz);
+  const allowance = await getBookingAllowance(student.id);
+  if (!allowance.ok) {
+    return (
+      <div className="mx-auto max-w-md text-center">
+        <h1 className="font-heading text-2xl font-bold">Elegí tu plan</h1>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Para reservar clases necesitás un plan activo. Elegí la frecuencia que mejor te quede y
+          empezá cuando quieras.
+        </p>
+        <Link href="/app/suscripcion" className="mt-4 inline-block text-sm font-medium text-sky-700 underline">
+          Ver planes
+        </Link>
+      </div>
+    );
+  }
+
+  // solo se ofrecen turnos que el plan permite (cupo del período en el que caen)
+  const slots = (await getAvailableSlots(student.assigned_teacher_id, tz)).filter((s) =>
+    quotaAllows(allowance, new Date(s.startUtc)),
+  );
+  const { current } = allowance;
+  const left = Math.max(current.limit - current.used, 0);
 
   return (
     <div className="space-y-6">
@@ -45,12 +67,19 @@ export default async function BookPage() {
           Horarios en tu zona horaria ({tz}). Clases de {CLASS_POLICY.classDurationMinutes} minutos.
         </p>
       </div>
+      <p className="rounded-lg border border-sky-200 bg-sky-50 px-4 py-3 text-sm text-sky-900">
+        Te quedan <strong>{left} de {current.limit}</strong> clases de tu plan hasta el{" "}
+        {fmtInTz(current.end.toISOString(), tz, "d 'de' MMMM")}.
+        {allowance.next
+          ? " Después de esa fecha también podés reservar a cuenta del período siguiente."
+          : " Tu plan no se renueva, así que solo se muestran turnos hasta esa fecha."}
+      </p>
       {slots.length ? (
         <SlotPicker slots={slots} />
       ) : (
         <p className="rounded-lg border bg-card px-4 py-6 text-sm text-muted-foreground">
-          Tu profesor no tiene turnos disponibles en los próximos {CLASS_POLICY.bookingWindowDays}{" "}
-          días. Escribinos y lo resolvemos.
+          No hay turnos disponibles para reservar en los próximos {CLASS_POLICY.bookingWindowDays}{" "}
+          días: o tu profesor no tiene horarios libres, o ya usaste las clases de tu plan.
         </p>
       )}
     </div>

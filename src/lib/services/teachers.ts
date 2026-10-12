@@ -1,7 +1,7 @@
 import "server-only";
 import { createClient } from "@/lib/supabase/server";
 
-export type TeacherRecord = { id: string; profile_id: string };
+export type TeacherRecord = { id: string; profile_id: string; meeting_url: string | null };
 
 /** Ficha de profesor del usuario logueado. */
 export async function getOwnTeacher(): Promise<TeacherRecord | null> {
@@ -12,7 +12,7 @@ export async function getOwnTeacher(): Promise<TeacherRecord | null> {
   if (!user) return null;
   const { data } = await supabase
     .from("teachers")
-    .select("id, profile_id")
+    .select("id, profile_id, meeting_url")
     .eq("profile_id", user.id)
     .maybeSingle();
   return (data as TeacherRecord) ?? null;

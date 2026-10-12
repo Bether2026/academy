@@ -54,7 +54,7 @@ export function ClassRow({ cls, tz, closable = false }: { cls: ClassData; tz: st
             <input type="hidden" name="classId" value={cls.id} />
             {!closable && (
               <div className="space-y-1.5">
-                <label className="text-xs font-medium">Enlace de videollamada (Meet/Zoom)</label>
+                <label className="text-xs font-medium">Enlace de esta clase (por defecto, tu sala)</label>
                 <Input
                   name="meetingUrl"
                   type="url"

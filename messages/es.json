@@ -152,5 +152,27 @@
     "signOut": "Cerrar sesión",
     "backHome": "Volver al inicio",
     "panelTitle": "Tu inglés, listo para despegar."
+  },
+  "emails": {
+    "greeting": "Hola {name},",
+    "footer": "Learning to Fly Academy · Este es un aviso automático de tu cuenta.",
+    "joinCta": "Entrar a la clase",
+    "openCta": "Ver mis clases",
+    "noRoom": "Tu profesor va a compartir el enlace de la videollamada antes de la clase.",
+    "bookedStudentSubject": "Clase reservada: {when}",
+    "bookedStudentBody": "Tu clase con {teacher} quedó reservada para el {when} ({tz}).",
+    "bookedTeacherSubject": "Nueva clase: {student} · {when}",
+    "bookedTeacherBody": "{student} reservó una clase con vos para el {when} ({tz}).",
+    "cancelledStudentSubject": "Clase cancelada: {when}",
+    "cancelledStudentBody": "Cancelaste tu clase del {when} ({tz}).",
+    "cancelledStudentLate": "Como faltaban menos de {hours} horas, la clase se descuenta de tu plan.",
+    "cancelledTeacherSubject": "Clase cancelada: {student} · {when}",
+    "cancelledTeacherBody": "{student} canceló la clase del {when} ({tz}). El horario vuelve a quedar libre.",
+    "reminderStudentSubject": "Mañana tenés clase: {when}",
+    "reminderStudentBody": "Te recordamos tu clase con {teacher} el {when} ({tz}).",
+    "reminderTeacherSubject": "Recordatorio: clase con {student} · {when}",
+    "reminderTeacherBody": "Mañana tenés clase con {student} el {when} ({tz}).",
+    "assignedSubject": "Ya tenés profesor: {teacher}",
+    "assignedBody": "Te asignamos a {teacher} como tu profesor. Ya podés reservar tu primera clase."
   }
 }

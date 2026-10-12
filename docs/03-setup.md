@@ -25,7 +25,7 @@ npm install
 Opción A — SQL Editor del dashboard (rápido para arrancar):
 
 1. Abrir **SQL Editor** en el dashboard.
-2. Ejecutar en orden: `supabase/migrations/0001_identity.sql`, luego `0002_domain.sql`, luego `0003_guards.sql`, luego `0004_plan_catalog.sql`, luego `supabase/seed.sql`.
+2. Ejecutar en orden: `supabase/migrations/0001_identity.sql`, luego `0002_domain.sql`, luego `0003_guards.sql`, luego `0004_plan_catalog.sql`, luego `0005_teacher_room.sql`, luego `supabase/seed.sql`.
 
 Opción B — Supabase CLI (recomendado a mediano plazo):
 
@@ -39,7 +39,17 @@ npx supabase db push
 - **Authentication → URL Configuration**: agregar `http://localhost:3000/auth/callback` (y la URL de producción cuando exista) a Redirect URLs. Site URL: `http://localhost:3000`.
 - **Authentication → Email**: los emails de confirmación y recuperación usan las plantillas por defecto de Supabase por ahora (personalizar en Fase 3 con Resend).
 
-## 5. Correr
+## 5. Emails y recordatorios (opcional)
+
+Sin configurar, la app funciona igual y solo registra en el log los emails que habría enviado.
+
+1. Crear cuenta en [Resend](https://resend.com), verificar el dominio de envío y generar una API key.
+2. Cargar en `.env.local` y en Vercel: `RESEND_API_KEY` y `EMAIL_FROM` (ej. `Learning to Fly Academy <hola@tudominio.com>`).
+3. Para los recordatorios diarios (`vercel.json`, todos los días 12:00 UTC): cargar `CRON_SECRET` en Vercel (un valor aleatorio largo). Sin esa variable el endpoint `/api/cron/reminders` rechaza todo.
+
+Emails que se envían: clase reservada (alumno y profesor), clase cancelada (ambos), recordatorio el día anterior (ambos) y profesor asignado (alumno).
+
+## 6. Correr
 
 ```bash
 npm run dev        # http://localhost:3000
@@ -48,7 +58,7 @@ npm run lint
 npm run build
 ```
 
-## 6. Crear el primer admin
+## 7. Crear el primer admin
 
 Los registros nuevos siempre nacen con rol `student` (regla de seguridad). Para promover un usuario a admin, ejecutar en el SQL Editor:
 

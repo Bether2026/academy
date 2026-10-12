@@ -6,8 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { removeAvailability } from "../actions";
 import { AvailabilityForm } from "./availability-form";
+import { MeetingRoomForm } from "./meeting-room-form";
 
-export const metadata: Metadata = { title: "Disponibilidad" };
+export const metadata: Metadata = { title: "Disponibilidad y sala" };
 
 const DAYS = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
 
@@ -35,12 +36,25 @@ export default async function AvailabilityPage() {
   return (
     <div className="max-w-2xl space-y-6">
       <div>
-        <h1 className="font-heading text-2xl font-bold">Mi disponibilidad</h1>
+        <h1 className="font-heading text-2xl font-bold">Disponibilidad y sala</h1>
         <p className="text-sm text-muted-foreground">
           Franjas semanales en tu zona horaria ({profile?.timezone}). Los alumnos reservan clases en
           punto dentro de estas franjas.
         </p>
       </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Tu sala de videollamada</CardTitle>
+          <p className="text-sm text-muted-foreground">
+            Tu enlace fijo de Google Meet, Zoom u otra plataforma. Se agrega solo a cada clase que
+            reserven tus alumnos; si en alguna clase necesitás otro, lo cambiás desde tu agenda.
+          </p>
+        </CardHeader>
+        <CardContent>
+          <MeetingRoomForm current={teacher?.meeting_url ?? null} />
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader>

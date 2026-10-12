@@ -1,11 +1,13 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { after } from "next/server";
 import { redirect } from "next/navigation";
 import { requireRole } from "@/lib/auth/session";
 import { createClient } from "@/lib/supabase/server";
 import { completeOnboarding, getOwnStudent, requestTeacherChange } from "@/lib/services/students";
 import { bookClass, cancelClass } from "@/lib/services/scheduling";
+import { notifyClassBooked, notifyClassCancelled } from "@/lib/services/notifications";
 import {
   bookSlotSchema,
   onboardingSchema,
@@ -47,6 +49,7 @@ export async function bookSlot(_prev: ActionState, formData: FormData): Promise<
   });
   if (!result.ok) return { error: result.error };
 
+  after(() => notifyClassBooked(result.classId));
   revalidatePath("/app/clases");
   redirect("/app/clases?reservada=1");
 }
@@ -59,7 +62,8 @@ export async function cancelOwnClass(formData: FormData): Promise<void> {
   const student = await getOwnStudent();
   if (!student) return;
 
-  await cancelClass({ classId, studentId: student.id });
+  const result = await cancelClass({ classId, studentId: student.id });
+  if (result.ok) after(() => notifyClassCancelled(classId, result.late));
   revalidatePath("/app/clases");
 }
 

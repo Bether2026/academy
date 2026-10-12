@@ -28,14 +28,13 @@ Plataforma de aprendizaje de inglés con profesores reales, clases individuales 
 - **Fase 8**: Escala — certificado de progreso (umbral 20 clases), sitemap.xml, robots.txt, traducciones en inglés.
 
 **El usuario debe:**
-1. Crear el proyecto Supabase y aplicar las 3 migraciones (`docs/03-setup.md`).
+1. Crear el proyecto Supabase y aplicar las migraciones en orden (`docs/03-setup.md`).
 2. Completar `.env.local` con las claves de Supabase, MercadoPago, Stripe y Anthropic (ver `.env.example`).
 3. En Stripe, configurar el webhook apuntando a `/api/webhooks/stripe` con los eventos: `checkout.session.completed`, `invoice.payment_succeeded`, `customer.subscription.updated`, `customer.subscription.deleted`.
 4. En MercadoPago, configurar el webhook apuntando a `/api/webhooks/mercadopago`.
+5. Para emails: `RESEND_API_KEY`, `EMAIL_FROM` y `CRON_SECRET` en Vercel (recordatorios diarios vía `vercel.json`).
 
-Política de clases (en `src/lib/services/policy.ts`): reserva con ≥12 h de anticipación, cancelación gratuita hasta 24 h antes, ventana de reserva de 14 días, clases de 50 min.
-
-Política de clases (en `src/lib/services/policy.ts`): reserva con ≥12 h de anticipación, cancelación gratuita hasta 24 h antes, ventana de reserva de 14 días, clases de 50 min.
+Política de clases (en `src/lib/services/policy.ts`): reserva con ≥12 h de anticipación, cancelación gratuita hasta 24 h antes, ventana de reserva de 14 días, clases de 50 min. Reservar exige plan activo (`active`/`trial`) y cupo: `classes_per_period` por período de facturación; las cancelaciones tardías consumen la clase. El servidor valida que el turno esté en la disponibilidad del profesor. Cada profesor tiene una sala fija (`teachers.meeting_url`) que se copia a la clase al reservar.
 
 ## Stack
 

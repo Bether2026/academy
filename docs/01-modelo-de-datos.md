@@ -71,6 +71,7 @@ Nota sobre el prompt original: `levels` como tabla se reemplaza por el enum `cef
 | `specialties` | text[] | `{'business','exams','conversation'}` |
 | `languages` | text[] | idiomas que habla |
 | `hourly_rate` | numeric(10,2) null | informativo v1; NO visible para alumnos |
+| `meeting_url` | text null | sala fija de videollamada (https); se copia a cada clase al reservar (0005). NO está en `teachers_public` |
 | `is_active` | boolean | default true |
 | `created_at`, `updated_at` | | |
 

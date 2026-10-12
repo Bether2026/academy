@@ -10,6 +10,7 @@ import {
   availabilitySchema,
   classUpdateSchema,
   levelAssessmentSchema,
+  meetingRoomSchema,
   progressRecordSchema,
 } from "@/lib/validators/teacher";
 
@@ -125,6 +126,38 @@ export async function addAvailability(_prev: ActionState, formData: FormData): P
   if (error) return { error: "No se pudo agregar la franja." };
   revalidatePath("/teacher/disponibilidad");
   return { message: "Franja agregada." };
+}
+
+/**
+ * Guarda la sala fija del profesor y la aplica a sus próximas clases que no
+ * tengan un enlace propio (o que tenían la sala anterior).
+ */
+export async function updateMeetingRoom(_prev: ActionState, formData: FormData): Promise<ActionState> {
+  await requireRole("teacher");
+  const parsed = meetingRoomSchema.safeParse(Object.fromEntries(formData));
+  if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Revisá el enlace." };
+
+  const teacher = await getOwnTeacher();
+  if (!teacher) return { error: "Perfil de profesor no encontrado." };
+
+  const newUrl = parsed.data.meetingUrl || null;
+  const supabase = await createClient();
+  const { error } = await supabase.from("teachers").update({ meeting_url: newUrl }).eq("id", teacher.id);
+  if (error) return { error: "No se pudo guardar la sala." };
+
+  const upcoming = () =>
+    supabase
+      .from("classes")
+      .update({ meeting_url: newUrl })
+      .eq("teacher_id", teacher.id)
+      .in("status", ["scheduled", "confirmed"])
+      .gt("scheduled_at", new Date().toISOString());
+  await upcoming().is("meeting_url", null);
+  if (teacher.meeting_url) await upcoming().eq("meeting_url", teacher.meeting_url);
+
+  revalidatePath("/teacher/disponibilidad");
+  revalidatePath("/teacher");
+  return { message: "Sala guardada. Se aplicó a tus próximas clases." };
 }
 
 export async function removeAvailability(formData: FormData): Promise<void> {

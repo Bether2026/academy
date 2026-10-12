@@ -1,9 +1,11 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { after } from "next/server";
 import { z } from "zod";
 import { requireRole } from "@/lib/auth/session";
 import { createClient } from "@/lib/supabase/server";
+import { notifyTeacherAssigned } from "@/lib/services/notifications";
 
 export type ActionState = { error?: string; message?: string };
 
@@ -56,6 +58,7 @@ export async function assignTeacher(_prev: ActionState, formData: FormData): Pro
     .update({ assigned_teacher_id: parsed.data.teacherId === "none" ? null : parsed.data.teacherId })
     .eq("id", parsed.data.studentId);
   if (error) return { error: "No se pudo asignar el profesor." };
+  if (parsed.data.teacherId !== "none") after(() => notifyTeacherAssigned(parsed.data.studentId));
 
   revalidatePath("/admin/usuarios");
   return { message: "Profesor asignado." };

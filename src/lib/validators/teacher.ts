@@ -43,3 +43,12 @@ export const availabilitySchema = z.object({
   startTime: z.string().regex(/^\d{2}:\d{2}$/),
   endTime: z.string().regex(/^\d{2}:\d{2}$/),
 });
+
+export const meetingRoomSchema = z.object({
+  meetingUrl: z
+    .string()
+    .trim()
+    .url()
+    .refine((u) => u.startsWith("https://"), "El enlace tiene que empezar con https://")
+    .or(z.literal("")),
+});
