@@ -90,60 +90,58 @@ const QUOTA_STATUSES = ["scheduled", "confirmed", "completed", "no_show"];
 type QuotaWindow = { start: Date; end: Date; limit: number; used: number };
 
 /**
- * Cupo de clases del alumno según su plan. Las clases cuentan en el período
- * en el que caen: el actual, o el siguiente si la suscripción se renueva.
+ * Cupo de clases del alumno según su plan, como lista de períodos
+ * consecutivos: el vigente primero. Cada período es una suscripción (los meses
+ * activados a mano son filas separadas); si la última se renueva sola, se suma
+ * el período siguiente. Las clases cuentan en el período en el que caen.
  */
-export type BookingAllowance =
-  | { ok: false }
-  | { ok: true; current: QuotaWindow; next: QuotaWindow | null };
+export type BookingAllowance = { ok: false } | { ok: true; windows: QuotaWindow[] };
 
 export async function getBookingAllowance(studentId: string): Promise<BookingAllowance> {
   const admin = createAdminClient();
-  const { data: sub } = await admin
+  const { data: subs } = await admin
     .from("subscriptions")
     .select("current_period_start, current_period_end, cancel_at_period_end, plan:plans(classes_per_period)")
     .eq("student_id", studentId)
     .in("status", BOOKABLE_SUBSCRIPTION)
     .gt("current_period_end", new Date().toISOString())
-    .order("current_period_end", { ascending: false })
-    .limit(1)
-    .maybeSingle();
-  if (!sub) return { ok: false };
+    .order("current_period_start");
+  if (!subs?.length) return { ok: false };
 
-  const limit = (sub.plan as unknown as { classes_per_period: number }).classes_per_period;
-  const start = new Date(sub.current_period_start);
-  const end = new Date(sub.current_period_end);
-  // el período siguiente dura lo mismo que el actual
-  const nextEnd = new Date(end.getTime() + (end.getTime() - start.getTime()));
+  const windows: QuotaWindow[] = subs.map((s) => ({
+    start: new Date(s.current_period_start),
+    end: new Date(s.current_period_end),
+    limit: (s.plan as unknown as { classes_per_period: number }).classes_per_period,
+    used: 0,
+  }));
+  const last = subs[subs.length - 1];
+  if (!last.cancel_at_period_end) {
+    // renovación automática: el período siguiente dura lo mismo que el último
+    const w = windows[windows.length - 1];
+    windows.push({ start: w.end, end: new Date(w.end.getTime() * 2 - w.start.getTime()), limit: w.limit, used: 0 });
+  }
 
   const { data: taken } = await admin
     .from("classes")
     .select("scheduled_at, status, cancellation_reason")
     .eq("student_id", studentId)
-    .gte("scheduled_at", start.toISOString())
-    .lt("scheduled_at", nextEnd.toISOString());
+    .gte("scheduled_at", windows[0].start.toISOString())
+    .lt("scheduled_at", windows[windows.length - 1].end.toISOString());
 
   // las cancelaciones tardías (< 24 h) también consumen la clase
-  const counted = (taken ?? []).filter(
-    (c) => QUOTA_STATUSES.includes(c.status) || c.cancellation_reason === "late_cancellation",
-  );
-  const usedIn = (from: Date, to: Date) =>
-    counted.filter((c) => {
-      const t = new Date(c.scheduled_at);
-      return t >= from && t < to;
-    }).length;
-
-  return {
-    ok: true,
-    current: { start, end, limit, used: usedIn(start, end) },
-    next: sub.cancel_at_period_end ? null : { start: end, end: nextEnd, limit, used: usedIn(end, nextEnd) },
-  };
+  for (const c of taken ?? []) {
+    if (!QUOTA_STATUSES.includes(c.status) && c.cancellation_reason !== "late_cancellation") continue;
+    const t = new Date(c.scheduled_at);
+    const w = windows.find((w) => t >= w.start && t < w.end);
+    if (w) w.used++;
+  }
+  return { ok: true, windows };
 }
 
 /** ¿El alumno puede reservar una clase que empieza en `at`? */
 export function quotaAllows(allowance: BookingAllowance, at: Date): boolean {
   if (!allowance.ok) return false;
-  const w = [allowance.current, allowance.next].find((w) => w && at >= w.start && at < w.end);
+  const w = allowance.windows.find((w) => at >= w.start && at < w.end);
   return !!w && w.used < w.limit;
 }
 

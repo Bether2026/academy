@@ -6,6 +6,7 @@ import { z } from "zod";
 import { requireRole } from "@/lib/auth/session";
 import { createClient } from "@/lib/supabase/server";
 import { notifyTeacherAssigned } from "@/lib/services/notifications";
+import { endManualPlan, grantManualMonth } from "@/lib/services/subscriptions";
 
 export type ActionState = { error?: string; message?: string };
 
@@ -84,4 +85,34 @@ export async function updatePlan(_prev: ActionState, formData: FormData): Promis
 
   revalidatePath("/admin/planes");
   return { message: "Plan actualizado." };
+}
+
+const grantPlanSchema = z.object({
+  studentId: z.string().uuid(),
+  planId: z.string().uuid(),
+  mode: z.enum(["paid", "courtesy"]),
+});
+
+/** Activa (o suma) un mes de plan pagado en efectivo/transferencia o de cortesía. */
+export async function grantPlan(_prev: ActionState, formData: FormData): Promise<ActionState> {
+  await requireRole("admin", "super_admin");
+  const parsed = grantPlanSchema.safeParse(Object.fromEntries(formData));
+  if (!parsed.success) return { error: "Elegí un plan." };
+
+  const result = await grantManualMonth(parsed.data);
+  if (!result.ok) return { error: result.error };
+
+  revalidatePath("/admin/usuarios");
+  const until = new Date(result.until).toLocaleDateString("es-AR", { day: "numeric", month: "long" });
+  return { message: `Plan activo hasta el ${until}.` };
+}
+
+export async function endPlan(_prev: ActionState, formData: FormData): Promise<ActionState> {
+  await requireRole("admin", "super_admin");
+  const parsed = z.object({ studentId: z.string().uuid() }).safeParse(Object.fromEntries(formData));
+  if (!parsed.success) return { error: "Datos inválidos." };
+
+  if (!(await endManualPlan(parsed.data.studentId))) return { error: "No se pudo dar de baja." };
+  revalidatePath("/admin/usuarios");
+  return { message: "Plan dado de baja." };
 }

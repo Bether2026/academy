@@ -53,8 +53,20 @@ export async function cancelSubscription(_prev: ActionState, formData: FormData)
   if (!parsed.success) return { error: "Datos inválidos." };
 
   const supabase = await createClient();
-  const { data: profile } = await supabase.from("profiles").select("country").eq("id", user.id).single();
-  if (!profile) return { error: "No se pudo verificar tu cuenta." };
+  const [{ data: profile }, { data: own }] = await Promise.all([
+    supabase.from("profiles").select("country").eq("id", user.id).single(),
+    // con la sesión del alumno, RLS solo devuelve sus propias suscripciones:
+    // así nadie puede cancelar la de otro mandando un id ajeno
+    supabase
+      .from("subscriptions")
+      .select("provider")
+      .eq("external_subscription_id", parsed.data.externalSubscriptionId)
+      .maybeSingle(),
+  ]);
+  if (!profile || !own) return { error: "No se pudo verificar tu suscripción." };
+  if (own.provider === "manual") {
+    return { error: "Tu plan lo gestiona la academia y no se renueva solo: no hace falta cancelarlo." };
+  }
 
   const provider = getPaymentProvider(profile.country);
   await provider.cancelSubscription({

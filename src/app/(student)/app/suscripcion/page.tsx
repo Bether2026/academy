@@ -108,7 +108,12 @@ export default async function SuscripcionPage({ searchParams }: { searchParams: 
                 </div>
               </div>
 
-              {subscription.cancel_at_period_end ? (
+              {subscription.provider === "manual" ? (
+                <p className="text-sm text-muted-foreground">
+                  Plan registrado por la academia. No se renueva solo: para continuar después del{" "}
+                  {fmtDate(subscription.current_period_end)}, coordiná el próximo pago con nosotros.
+                </p>
+              ) : subscription.cancel_at_period_end ? (
                 <p className="text-sm text-amber-700">
                   Tu suscripción se cancela el {fmtDate(subscription.current_period_end)}. Seguís con acceso completo hasta esa fecha.
                 </p>

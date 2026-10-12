@@ -21,7 +21,7 @@ create type cancelled_by    as enum ('student','teacher','admin','system');
 create type assignment_status as enum ('pending','submitted','reviewed','overdue');
 create type progress_category as enum ('speaking','listening','reading','writing','grammar','vocabulary','pronunciation');
 create type material_type   as enum ('document','video','audio','link','exercise');
-create type payment_provider as enum ('mercadopago','stripe');
+create type payment_provider as enum ('mercadopago','stripe','manual');  -- manual: alta del admin (0006)
 create type subscription_status as enum ('active','past_due','cancelled','expired','trial');
 create type payment_status  as enum ('approved','pending','rejected','refunded');
 create type billing_interval as enum ('monthly','quarterly','yearly');

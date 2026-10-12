@@ -34,7 +34,7 @@ Plataforma de aprendizaje de inglés con profesores reales, clases individuales 
 4. En MercadoPago, configurar el webhook apuntando a `/api/webhooks/mercadopago`.
 5. Para emails: `RESEND_API_KEY`, `EMAIL_FROM` y `CRON_SECRET` en Vercel (recordatorios diarios vía `vercel.json`).
 
-Política de clases (en `src/lib/services/policy.ts`): reserva con ≥12 h de anticipación, cancelación gratuita hasta 24 h antes, ventana de reserva de 14 días, clases de 50 min. Reservar exige plan activo (`active`/`trial`) y cupo: `classes_per_period` por período de facturación; las cancelaciones tardías consumen la clase. El servidor valida que el turno esté en la disponibilidad del profesor. Cada profesor tiene una sala fija (`teachers.meeting_url`) que se copia a la clase al reservar.
+Política de clases (en `src/lib/services/policy.ts`): reserva con ≥12 h de anticipación, cancelación gratuita hasta 24 h antes, ventana de reserva de 14 días, clases de 50 min. Reservar exige plan activo (`active`/`trial`) y cupo: `classes_per_period` por período de facturación; las cancelaciones tardías consumen la clase. El servidor valida que el turno esté en la disponibilidad del profesor. Cada profesor tiene una sala fija (`teachers.meeting_url`) que se copia a la clase al reservar. El admin puede activar meses de plan sin pago online (efectivo/transferencia o cortesía) desde Usuarios: cada mes es una fila de `subscriptions` con provider `manual`. Copia de datos: `npm run backup`.
 
 ## Stack
 

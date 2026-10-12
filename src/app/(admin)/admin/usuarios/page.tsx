@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { requireRole } from "@/lib/auth/session";
 import { createClient } from "@/lib/supabase/server";
+import { getStudentPlanCoverage } from "@/lib/services/subscriptions";
 import { UserRow } from "./user-row";
 
 export const metadata: Metadata = { title: "Usuarios" };
@@ -9,7 +10,7 @@ export default async function UsersPage() {
   await requireRole("admin", "super_admin");
   const supabase = await createClient();
 
-  const [{ data: profiles }, { data: students }, { data: teachers }] = await Promise.all([
+  const [{ data: profiles }, { data: students }, { data: teachers }, { data: plans }, coverage] = await Promise.all([
     supabase
       .from("profiles")
       .select("id, first_name, last_name, email, role, country, created_at")
@@ -19,6 +20,14 @@ export default async function UsersPage() {
     supabase
       .from("teachers")
       .select("id, profile_id, is_active, profiles:profile_id(first_name, last_name)"),
+    supabase
+      .from("plans")
+      .select("id, name, price, currency")
+      .eq("is_active", true)
+      .order("category")
+      .order("track")
+      .order("sessions_per_week"),
+    getStudentPlanCoverage(),
   ]);
 
   const studentByProfile = new Map(
@@ -44,6 +53,8 @@ export default async function UsersPage() {
             profile={p}
             student={studentByProfile.get(p.id) ?? null}
             teacherOptions={teacherOptions}
+            plans={(plans ?? []).filter((pl) => pl.currency.trim() === (p.country === "ES" ? "EUR" : "ARS"))}
+            coverage={coverage.get(studentByProfile.get(p.id)?.id ?? "") ?? null}
           />
         ))}
       </div>

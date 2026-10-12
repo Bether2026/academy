@@ -25,7 +25,7 @@ npm install
 Opción A — SQL Editor del dashboard (rápido para arrancar):
 
 1. Abrir **SQL Editor** en el dashboard.
-2. Ejecutar en orden: `supabase/migrations/0001_identity.sql`, luego `0002_domain.sql`, luego `0003_guards.sql`, luego `0004_plan_catalog.sql`, luego `0005_teacher_room.sql`, luego `supabase/seed.sql`.
+2. Ejecutar en orden: `supabase/migrations/0001_identity.sql`, luego `0002_domain.sql`, luego `0003_guards.sql`, luego `0004_plan_catalog.sql`, luego `0005_teacher_room.sql`, luego `0006_manual_plans.sql`, luego `supabase/seed.sql`.
 
 Opción B — Supabase CLI (recomendado a mediano plazo):
 
@@ -67,6 +67,23 @@ update public.profiles set role = 'admin' where email = 'tu-email@ejemplo.com';
 ```
 
 El trigger sincroniza el rol al JWT; el usuario debe cerrar sesión y volver a entrar para que aplique.
+
+## 8. Copias de seguridad (plan Free de Supabase: no hay backups automáticos)
+
+```bash
+npm run backup
+```
+
+Exporta todas las tablas y las cuentas a `backups/AAAA-MM-DD/*.json` (carpeta ignorada por git: contiene datos personales; guardarla también fuera de la PC, p. ej. en un Drive privado). Correrlo al menos una vez por semana. El esquema no se exporta porque está en `supabase/migrations/`. Las contraseñas no son exportables: tras una restauración los usuarios usan "¿Olvidaste tu contraseña?". Los archivos subidos (avatares) no se incluyen.
+
+## 9. Dominio propio (cuando esté comprado)
+
+1. **Vercel → proyecto → Settings → Domains → Add**: cargar el dominio y crear en el proveedor del dominio los registros DNS que indica Vercel.
+2. **Vercel → Environment Variables**: `NEXT_PUBLIC_APP_URL` = `https://tudominio.com` y redeploy.
+3. **Supabase → Authentication → URL Configuration**: Site URL = `https://tudominio.com`; agregar `https://tudominio.com/auth/callback` a Redirect URLs (dejar las existentes).
+4. **Resend → Domains → Add domain**: crear en el DNS los registros que indica (SPF/DKIM) y esperar "Verified". Crear la API key y cargar `RESEND_API_KEY`, `EMAIL_FROM` (`Learning to Fly Academy <hola@tudominio.com>`) y `CRON_SECRET` en Vercel.
+5. **Supabase → Authentication → Emails → SMTP Settings** (emails de registro y contraseña sin el límite del plan Free): host `smtp.resend.com`, puerto `465`, usuario `resend`, contraseña = la API key de Resend, remitente = el mismo de `EMAIL_FROM`.
+6. Si ya están configurados los pagos: actualizar la URL de los webhooks de MercadoPago y Stripe al dominio nuevo.
 
 ## Notas
 

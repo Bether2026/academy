@@ -56,7 +56,8 @@ export default async function BookPage() {
   const slots = (await getAvailableSlots(student.assigned_teacher_id, tz)).filter((s) =>
     quotaAllows(allowance, new Date(s.startUtc)),
   );
-  const { current } = allowance;
+  const [current] = allowance.windows;
+  const lastEnd = allowance.windows[allowance.windows.length - 1].end;
   const left = Math.max(current.limit - current.used, 0);
 
   return (
@@ -70,9 +71,9 @@ export default async function BookPage() {
       <p className="rounded-lg border border-sky-200 bg-sky-50 px-4 py-3 text-sm text-sky-900">
         Te quedan <strong>{left} de {current.limit}</strong> clases de tu plan hasta el{" "}
         {fmtInTz(current.end.toISOString(), tz, "d 'de' MMMM")}.
-        {allowance.next
-          ? " Después de esa fecha también podés reservar a cuenta del período siguiente."
-          : " Tu plan no se renueva, así que solo se muestran turnos hasta esa fecha."}
+        {allowance.windows.length > 1
+          ? ` También podés reservar a cuenta del período siguiente, hasta el ${fmtInTz(lastEnd.toISOString(), tz, "d 'de' MMMM")}.`
+          : " Tu plan no tiene un período siguiente, así que solo se muestran turnos hasta esa fecha."}
       </p>
       {slots.length ? (
         <SlotPicker slots={slots} />
