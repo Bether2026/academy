@@ -7,8 +7,8 @@ export const metadata: Metadata = { title: t.auth.loginTitle };
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ next?: string }>;
+  searchParams: Promise<{ next?: string; aviso?: string }>;
 }) {
-  const { next } = await searchParams;
-  return <LoginForm next={next} />;
+  const { next, aviso } = await searchParams;
+  return <LoginForm next={next} notice={aviso === "link" ? t.auth.linkNotice : undefined} />;
 }

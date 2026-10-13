@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-export function LoginForm({ next }: { next?: string }) {
+export function LoginForm({ next, notice }: { next?: string; notice?: string }) {
   const [state, action, pending] = useActionState<AuthState, FormData>(login, {});
 
   return (
@@ -17,6 +17,9 @@ export function LoginForm({ next }: { next?: string }) {
         <h1 className="font-heading text-2xl font-bold">{t.auth.loginTitle}</h1>
         <p className="text-sm text-muted-foreground">{t.auth.loginSubtitle}</p>
       </div>
+      {notice && (
+        <p className="rounded-lg border border-sky-200 bg-sky-50 px-3 py-2 text-sm text-sky-900">{notice}</p>
+      )}
       {next && <input type="hidden" name="next" value={next} />}
       <div className="space-y-2">
         <Label htmlFor="email">{t.auth.email}</Label>

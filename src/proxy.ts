@@ -19,6 +19,14 @@ const ROLE_HOME: Record<string, string> = {
  * La seguridad real está en requireRole() (servidor) y RLS (base de datos).
  */
 export async function proxy(request: NextRequest) {
+  // Link de email que cayó en la home (Site URL de Supabase): completarlo en el callback
+  const code = request.nextUrl.searchParams.get("code");
+  if (request.nextUrl.pathname === "/" && code) {
+    const callback = new URL("/auth/callback", request.url);
+    callback.searchParams.set("code", code);
+    return NextResponse.redirect(callback);
+  }
+
   let response = NextResponse.next({ request });
 
   // Sin credenciales configuradas (setup inicial): dejar pasar la landing.

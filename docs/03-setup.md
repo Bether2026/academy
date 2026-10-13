@@ -39,7 +39,15 @@ npx supabase db push
 - **Authentication → URL Configuration**: agregar `http://localhost:3000/auth/callback` (y la URL de producción cuando exista) a Redirect URLs. Site URL: `http://localhost:3000`.
 - **Authentication → Email**: los emails de confirmación y recuperación usan las plantillas por defecto de Supabase por ahora (personalizar en Fase 3 con Resend).
 
-## 5. Emails y recordatorios (opcional)
+## 5. Emails de registro y contraseña (obligatorio)
+
+El SMTP incluido en Supabase solo envía a miembros del equipo del proyecto: sin SMTP propio, los alumnos no reciben el email de confirmación.
+
+- **Authentication → Emails → SMTP Settings**: hoy se usa Gmail (`academylearningtf@gmail.com`, contraseña de aplicación de Google, `smtp.gmail.com:465`). Al tener dominio, pasar a Resend (ver §9).
+- **Authentication → Emails → Templates**: pegar `supabase/templates/confirm-signup.html` en "Confirm sign up" y `supabase/templates/reset-password.html` en "Reset password" (los asuntos están en el comentario de cada archivo).
+- **Authentication → URL Configuration**: Site URL = URL de producción; Redirect URLs con `/**` para producción y `http://localhost:3000/**`.
+
+## 5b. Emails de la plataforma y recordatorios (opcional)
 
 Sin configurar, la app funciona igual y solo registra en el log los emails que habría enviado.
 

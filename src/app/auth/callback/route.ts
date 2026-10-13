@@ -14,5 +14,7 @@ export async function GET(request: Request) {
     if (!error) return NextResponse.redirect(`${origin}${next}`);
   }
 
-  return NextResponse.redirect(`${origin}/login?error=auth`);
+  // El link ya confirmó el email en Supabase; si no se pudo abrir la sesión
+  // (p. ej. se abrió en otro navegador/dispositivo), se pide iniciar sesión.
+  return NextResponse.redirect(`${origin}/login?aviso=link`);
 }
