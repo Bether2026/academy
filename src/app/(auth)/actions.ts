@@ -39,7 +39,12 @@ export async function register(_prev: AuthState, formData: FormData): Promise<Au
   });
 
   if (error) return { error: "No pudimos crear la cuenta. Probá de nuevo." };
-  return { message: "Te enviamos un email para confirmar tu cuenta. Revisá tu bandeja." };
+  // Supabase no revela si el email ya existe (en ese caso no envía nada):
+  // el mensaje cubre los dos casos sin confirmar quién tiene cuenta.
+  return {
+    message:
+      "Te enviamos un email para confirmar tu cuenta: revisá tu bandeja (y spam). Si ya tenías una cuenta con este email, no vas a recibir nada: iniciá sesión o usá \"¿Olvidaste tu contraseña?\".",
+  };
 }
 
 export async function login(_prev: AuthState, formData: FormData): Promise<AuthState> {

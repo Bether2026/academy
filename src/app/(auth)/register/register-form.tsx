@@ -13,9 +13,17 @@ export function RegisterForm() {
 
   if (state.message) {
     return (
-      <div className="space-y-2 text-center">
+      <div className="space-y-4 text-center">
         <h1 className="font-heading text-2xl font-bold">✈️</h1>
         <p className="text-sm text-muted-foreground">{state.message}</p>
+        <div className="flex flex-col gap-2 text-sm">
+          <Link href="/login" className="font-medium text-sky-700 hover:underline">
+            {t.auth.loginCta}
+          </Link>
+          <Link href="/forgot-password" className="text-sky-700 hover:underline">
+            {t.auth.forgot}
+          </Link>
+        </div>
       </div>
     );
   }
