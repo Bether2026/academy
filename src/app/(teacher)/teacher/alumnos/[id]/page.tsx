@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { requireRole } from "@/lib/auth/session";
+import { requireTeacher } from "@/lib/auth/session";
 import { createClient } from "@/lib/supabase/server";
 import { fmtInTz } from "@/lib/utils/dates";
 import { Badge } from "@/components/ui/badge";
@@ -22,7 +22,7 @@ export default async function StudentDetailPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const { user } = await requireRole("teacher");
+  const { user } = await requireTeacher();
   const { id } = await params;
   const supabase = await createClient();
 

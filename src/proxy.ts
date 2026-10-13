@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 
 const PROTECTED: Array<{ prefix: string; roles: string[] }> = [
   { prefix: "/app", roles: ["student"] },
-  { prefix: "/teacher", roles: ["teacher"] },
+  { prefix: "/teacher", roles: ["teacher", "admin", "super_admin"] }, // admin que también da clases
   { prefix: "/admin", roles: ["admin", "super_admin"] },
 ];
 

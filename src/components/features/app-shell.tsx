@@ -17,11 +17,14 @@ export function AppShell({
   roleLabel,
   home,
   nav = [],
+  switchTo,
   children,
 }: {
   roleLabel: string;
   home: string;
   nav?: NavItem[];
+  /** Acceso al otro panel (admin que también da clases). */
+  switchTo?: NavItem;
   children: React.ReactNode;
 }) {
   const roleClass = ROLE_COLORS[roleLabel] ?? "bg-white/10 text-white/70 border-white/15";
@@ -42,6 +45,14 @@ export function AppShell({
             <Logo dark />
           </Link>
           <div className="flex items-center gap-2.5">
+            {switchTo && (
+              <Link
+                href={switchTo.href}
+                className="rounded-full border border-white/20 px-3 py-1 text-xs font-semibold text-white/80 transition-colors hover:bg-white/10 hover:text-white"
+              >
+                {switchTo.label} →
+              </Link>
+            )}
             <span
               className={`hidden rounded-full border px-2.5 py-0.5 text-xs font-semibold tracking-wide sm:inline-flex ${roleClass}`}
             >

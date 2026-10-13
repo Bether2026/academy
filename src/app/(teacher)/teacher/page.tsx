@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { requireRole } from "@/lib/auth/session";
+import { requireTeacher } from "@/lib/auth/session";
 import { createClient } from "@/lib/supabase/server";
 import { getOwnTeacher } from "@/lib/services/teachers";
 import { Badge } from "@/components/ui/badge";
@@ -7,7 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ClassRow } from "./class-row";
 
 export default async function TeacherAgenda() {
-  const { user } = await requireRole("teacher");
+  const { user } = await requireTeacher();
   const teacher = await getOwnTeacher();
   const supabase = await createClient();
 

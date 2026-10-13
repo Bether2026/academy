@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { requireRole } from "@/lib/auth/session";
+import { requireTeacher } from "@/lib/auth/session";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getOwnTeacher } from "@/lib/services/teachers";
@@ -17,7 +17,7 @@ import {
 export type ActionState = { error?: string; message?: string };
 
 export async function addProgressRecord(_prev: ActionState, formData: FormData): Promise<ActionState> {
-  await requireRole("teacher");
+  await requireTeacher();
   const parsed = progressRecordSchema.safeParse(Object.fromEntries(formData));
   if (!parsed.success) return { error: "Revisá los datos del registro." };
 
@@ -38,7 +38,7 @@ export async function addProgressRecord(_prev: ActionState, formData: FormData):
 }
 
 export async function addAssignment(_prev: ActionState, formData: FormData): Promise<ActionState> {
-  await requireRole("teacher");
+  await requireTeacher();
   const parsed = assignmentSchema.safeParse(Object.fromEntries(formData));
   if (!parsed.success) return { error: "Revisá los datos de la tarea." };
 
@@ -59,7 +59,7 @@ export async function addAssignment(_prev: ActionState, formData: FormData): Pro
 }
 
 export async function updateClass(_prev: ActionState, formData: FormData): Promise<ActionState> {
-  await requireRole("teacher");
+  await requireTeacher();
   const parsed = classUpdateSchema.safeParse(Object.fromEntries(formData));
   if (!parsed.success) return { error: "Datos inválidos." };
 
@@ -77,7 +77,7 @@ export async function updateClass(_prev: ActionState, formData: FormData): Promi
 }
 
 export async function assessLevel(_prev: ActionState, formData: FormData): Promise<ActionState> {
-  await requireRole("teacher");
+  await requireTeacher();
   const parsed = levelAssessmentSchema.safeParse(Object.fromEntries(formData));
   if (!parsed.success) return { error: "Datos inválidos." };
 
@@ -106,7 +106,7 @@ export async function assessLevel(_prev: ActionState, formData: FormData): Promi
 }
 
 export async function addAvailability(_prev: ActionState, formData: FormData): Promise<ActionState> {
-  await requireRole("teacher");
+  await requireTeacher();
   const parsed = availabilitySchema.safeParse(Object.fromEntries(formData));
   if (!parsed.success) return { error: "Revisá el horario." };
   if (parsed.data.startTime >= parsed.data.endTime) {
@@ -133,7 +133,7 @@ export async function addAvailability(_prev: ActionState, formData: FormData): P
  * tengan un enlace propio (o que tenían la sala anterior).
  */
 export async function updateMeetingRoom(_prev: ActionState, formData: FormData): Promise<ActionState> {
-  await requireRole("teacher");
+  await requireTeacher();
   const parsed = meetingRoomSchema.safeParse(Object.fromEntries(formData));
   if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Revisá el enlace." };
 
@@ -161,7 +161,7 @@ export async function updateMeetingRoom(_prev: ActionState, formData: FormData):
 }
 
 export async function removeAvailability(formData: FormData): Promise<void> {
-  await requireRole("teacher");
+  await requireTeacher();
   const id = formData.get("id");
   if (typeof id !== "string") return;
   const supabase = await createClient();

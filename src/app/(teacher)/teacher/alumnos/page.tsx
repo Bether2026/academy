@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { requireRole } from "@/lib/auth/session";
+import { requireTeacher } from "@/lib/auth/session";
 import { createClient } from "@/lib/supabase/server";
 import { getOwnTeacher } from "@/lib/services/teachers";
 import { Badge } from "@/components/ui/badge";
@@ -9,7 +9,7 @@ import { Card, CardContent } from "@/components/ui/card";
 export const metadata: Metadata = { title: "Mis alumnos" };
 
 export default async function TeacherStudentsPage() {
-  await requireRole("teacher");
+  await requireTeacher();
   const teacher = await getOwnTeacher();
   const supabase = await createClient();
 

@@ -41,3 +41,22 @@ export async function requireRole(...roles: UserRole[]) {
   if (!roles.includes(role)) redirect(ROLE_HOME[role] ?? "/login");
   return { user, role };
 }
+
+/** ¿El usuario (admin) tiene ficha de profesor activa? Un admin puede además dar clases. */
+export async function hasActiveTeacherProfile(userId: string) {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("teachers")
+    .select("id")
+    .eq("profile_id", userId)
+    .eq("is_active", true)
+    .maybeSingle();
+  return !!data;
+}
+
+/** Exige ser profesor, o admin que también da clases. */
+export async function requireTeacher() {
+  const { user, role } = await requireRole("teacher", "admin", "super_admin");
+  if (role !== "teacher" && !(await hasActiveTeacherProfile(user.id))) redirect(ROLE_HOME[role]);
+  return { user, role };
+}

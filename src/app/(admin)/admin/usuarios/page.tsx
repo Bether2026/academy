@@ -33,7 +33,10 @@ export default async function UsersPage() {
   const studentByProfile = new Map(
     (students ?? []).map((s) => [s.profile_id, s]),
   );
-  const teacherOptions = (teachers ?? []).map((tr) => {
+  const activeTeacherProfiles = new Set(
+    (teachers ?? []).filter((tr) => tr.is_active).map((tr) => tr.profile_id),
+  );
+  const teacherOptions = (teachers ?? []).filter((tr) => tr.is_active).map((tr) => {
     const p = tr.profiles as unknown as { first_name: string; last_name: string };
     return { id: tr.id, name: `${p.first_name} ${p.last_name}`.trim() || tr.id.slice(0, 8) };
   });
@@ -53,6 +56,7 @@ export default async function UsersPage() {
             profile={p}
             student={studentByProfile.get(p.id) ?? null}
             teacherOptions={teacherOptions}
+            teaches={activeTeacherProfiles.has(p.id)}
             plans={(plans ?? []).filter((pl) => pl.currency.trim() === (p.country === "ES" ? "EUR" : "ARS"))}
             coverage={coverage.get(studentByProfile.get(p.id)?.id ?? "") ?? null}
           />

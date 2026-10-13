@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { requireRole } from "@/lib/auth/session";
+import { requireTeacher } from "@/lib/auth/session";
 import { createClient } from "@/lib/supabase/server";
 import { getOwnTeacher } from "@/lib/services/teachers";
 import { Button } from "@/components/ui/button";
@@ -13,7 +13,7 @@ export const metadata: Metadata = { title: "Disponibilidad y sala" };
 const DAYS = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
 
 export default async function AvailabilityPage() {
-  const { user } = await requireRole("teacher");
+  const { user } = await requireTeacher();
   const teacher = await getOwnTeacher();
   const supabase = await createClient();
 

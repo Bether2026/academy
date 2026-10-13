@@ -116,3 +116,38 @@ export async function endPlan(_prev: ActionState, formData: FormData): Promise<A
   revalidatePath("/admin/usuarios");
   return { message: "Plan dado de baja." };
 }
+
+const teachesSchema = z.object({
+  profileId: z.string().uuid(),
+  teaches: z.enum(["true", "false"]),
+});
+
+/** Un admin también puede dar clases: crea/activa o desactiva su ficha de profesor (nunca se borra). */
+export async function setTeaches(_prev: ActionState, formData: FormData): Promise<ActionState> {
+  await requireRole("admin", "super_admin");
+  const parsed = teachesSchema.safeParse(Object.fromEntries(formData));
+  if (!parsed.success) return { error: "Datos inválidos." };
+
+  const supabase = await createClient();
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", parsed.data.profileId)
+    .single();
+  if (!profile || !["admin", "super_admin"].includes(profile.role)) {
+    return { error: "Solo aplica a administradores." };
+  }
+
+  const isActive = parsed.data.teaches === "true";
+  const { error } = await supabase
+    .from("teachers")
+    .upsert({ profile_id: parsed.data.profileId, is_active: isActive }, { onConflict: "profile_id" });
+  if (error) return { error: "No se pudo actualizar." };
+
+  revalidatePath("/admin", "layout");
+  return {
+    message: isActive
+      ? "Listo: ya tiene panel de profesor (botón \"Mis clases\" arriba)."
+      : "Ya no figura como profesor. Sus clases anteriores se conservan.",
+  };
+}

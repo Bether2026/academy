@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import { assignTeacher, endPlan, grantPlan, setUserRole, type ActionState } from "../actions";
+import { assignTeacher, endPlan, grantPlan, setTeaches, setUserRole, type ActionState } from "../actions";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -37,18 +37,22 @@ export function UserRow({
   teacherOptions,
   plans,
   coverage,
+  teaches,
 }: {
   profile: Profile;
   student: Student | null;
   teacherOptions: { id: string; name: string }[];
   plans: PlanOption[];
   coverage: Coverage | null;
+  teaches: boolean;
 }) {
   const [roleState, roleAction, rolePending] = useActionState<ActionState, FormData>(setUserRole, {});
   const [assignState, assignAction, assignPending] = useActionState<ActionState, FormData>(assignTeacher, {});
   const [grantState, grantAction, grantPending] = useActionState<ActionState, FormData>(grantPlan, {});
   const [endState, endAction, endPending] = useActionState<ActionState, FormData>(endPlan, {});
+  const [teachState, teachAction, teachPending] = useActionState<ActionState, FormData>(setTeaches, {});
   const [open, setOpen] = useState(false);
+  const isAdmin = profile.role === "admin" || profile.role === "super_admin";
 
   return (
     <Card>
@@ -62,6 +66,7 @@ export function UserRow({
             <div className="mt-1 flex items-center gap-1.5">
               <Badge variant="secondary">{ROLE_LABEL[profile.role] ?? profile.role}</Badge>
               <Badge variant="outline">{profile.country}</Badge>
+              {isAdmin && teaches && <Badge variant="outline">También da clases</Badge>}
               {student?.current_level && <Badge variant="outline">{student.current_level}</Badge>}
               {student && (
                 <Badge variant={coverage ? "default" : "outline"}>
@@ -77,6 +82,21 @@ export function UserRow({
 
         {open && (
           <div className="flex flex-wrap gap-6 rounded-lg bg-muted/50 p-3">
+            {isAdmin && (
+              <form action={teachAction} className="flex w-full flex-wrap items-center gap-2">
+                <input type="hidden" name="profileId" value={profile.id} />
+                <input type="hidden" name="teaches" value={teaches ? "false" : "true"} />
+                <span className="text-xs">
+                  <span className="font-medium">También da clases:</span> {teaches ? "Sí" : "No"}
+                </span>
+                <Button size="sm" variant="outline" disabled={teachPending}>
+                  {teaches ? "Dejar de dar clases" : "Habilitar como profesor"}
+                </Button>
+                {teachState.error && <p className="text-xs text-destructive">{teachState.error}</p>}
+                {teachState.message && <p className="text-xs text-sky-700">{teachState.message}</p>}
+              </form>
+            )}
+
             <form action={roleAction} className="flex items-end gap-2">
               <input type="hidden" name="profileId" value={profile.id} />
               <div className="space-y-1">
