@@ -42,7 +42,7 @@ export function AvailabilityForm() {
         <label className="text-xs font-medium">Hasta</label>
         <Input name="endTime" type="time" step={3600} defaultValue="12:00" required className="w-28" />
       </div>
-      <Button disabled={pending}>{pending ? "…" : "Agregar"}</Button>
+      <Button type="submit" disabled={pending}>{pending ? "…" : "Agregar"}</Button>
       {state.error && <p className="w-full text-xs text-destructive">{state.error}</p>}
       {state.message && <p className="w-full text-xs text-sky-700">{state.message}</p>}
     </form>

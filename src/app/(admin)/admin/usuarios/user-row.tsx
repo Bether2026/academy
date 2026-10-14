@@ -89,7 +89,7 @@ export function UserRow({
                 <span className="text-xs">
                   <span className="font-medium">También da clases:</span> {teaches ? "Sí" : "No"}
                 </span>
-                <Button size="sm" variant="outline" disabled={teachPending}>
+                <Button type="submit" size="sm" variant="outline" disabled={teachPending}>
                   {teaches ? "Dejar de dar clases" : "Habilitar como profesor"}
                 </Button>
                 {teachState.error && <p className="text-xs text-destructive">{teachState.error}</p>}
@@ -107,7 +107,7 @@ export function UserRow({
                   <option value="admin">Admin</option>
                 </select>
               </div>
-              <Button size="sm" disabled={rolePending}>
+              <Button type="submit" size="sm" disabled={rolePending}>
                 Cambiar rol
               </Button>
               {roleState.error && <p className="text-xs text-destructive">{roleState.error}</p>}
@@ -132,7 +132,7 @@ export function UserRow({
                     ))}
                   </select>
                 </div>
-                <Button size="sm" disabled={assignPending}>
+                <Button type="submit" size="sm" disabled={assignPending}>
                   Asignar
                 </Button>
                 {assignState.error && <p className="text-xs text-destructive">{assignState.error}</p>}
@@ -179,14 +179,14 @@ export function UserRow({
                         <option value="paid">Pagó (efectivo/transferencia)</option>
                         <option value="courtesy">Cortesía / prueba sin cargo</option>
                       </select>
-                      <Button size="sm" disabled={grantPending}>
+                      <Button type="submit" size="sm" disabled={grantPending}>
                         {coverage ? "Sumar 1 mes" : "Activar 1 mes"}
                       </Button>
                     </form>
                     {coverage && (
                       <form action={endAction}>
                         <input type="hidden" name="studentId" value={student.id} />
-                        <Button size="sm" variant="outline" disabled={endPending}>
+                        <Button type="submit" size="sm" variant="outline" disabled={endPending}>
                           Dar de baja
                         </Button>
                       </form>

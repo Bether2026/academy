@@ -51,7 +51,7 @@ export function PlanRow({ plan }: { plan: Plan }) {
                 <option value="false">Inactivo</option>
               </select>
             </div>
-            <Button size="sm" disabled={pending}>
+            <Button type="submit" size="sm" disabled={pending}>
               Guardar
             </Button>
           </div>

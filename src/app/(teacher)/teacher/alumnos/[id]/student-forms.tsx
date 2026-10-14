@@ -40,7 +40,7 @@ function ProgressForm({ studentId }: { studentId: string }) {
       <Textarea name="notes" rows={2} placeholder="Comentario para el alumno (opcional)" />
       {state.error && <p className="text-xs text-destructive">{state.error}</p>}
       {state.message && <p className="text-xs text-sky-700">{state.message}</p>}
-      <Button size="sm" disabled={pending}>
+      <Button type="submit" size="sm" disabled={pending}>
         Registrar progreso
       </Button>
     </form>
@@ -60,7 +60,7 @@ function AssignmentForm({ studentId }: { studentId: string }) {
       </div>
       {state.error && <p className="text-xs text-destructive">{state.error}</p>}
       {state.message && <p className="text-xs text-sky-700">{state.message}</p>}
-      <Button size="sm" disabled={pending}>
+      <Button type="submit" size="sm" disabled={pending}>
         Asignar tarea
       </Button>
     </form>
@@ -82,7 +82,7 @@ function LevelForm({ studentId }: { studentId: string }) {
       <Textarea name="notes" rows={2} placeholder="Justificación (opcional)" />
       {state.error && <p className="text-xs text-destructive">{state.error}</p>}
       {state.message && <p className="text-xs text-sky-700">{state.message}</p>}
-      <Button size="sm" disabled={pending}>
+      <Button type="submit" size="sm" disabled={pending}>
         Actualizar nivel
       </Button>
     </form>

@@ -69,20 +69,20 @@ export function ClassRow({ cls, tz, closable = false }: { cls: ClassData; tz: st
             </div>
             {closable ? (
               <div className="flex gap-2">
-                <Button size="sm" name="status" value="completed" disabled={pending}>
+                <Button type="submit" size="sm" name="status" value="completed" disabled={pending}>
                   Completada
                 </Button>
-                <Button size="sm" variant="outline" name="status" value="no_show" disabled={pending}>
+                <Button type="submit" size="sm" variant="outline" name="status" value="no_show" disabled={pending}>
                   Ausente
                 </Button>
               </div>
             ) : (
               <div className="flex gap-2">
-                <Button size="sm" disabled={pending}>
+                <Button type="submit" size="sm" disabled={pending}>
                   Guardar
                 </Button>
                 {cls.status === "scheduled" && (
-                  <Button size="sm" variant="outline" name="status" value="confirmed" disabled={pending}>
+                  <Button type="submit" size="sm" variant="outline" name="status" value="confirmed" disabled={pending}>
                     Confirmar clase
                   </Button>
                 )}

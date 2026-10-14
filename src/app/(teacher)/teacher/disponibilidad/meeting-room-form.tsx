@@ -18,7 +18,7 @@ export function MeetingRoomForm({ current }: { current: string | null }) {
           placeholder="https://meet.google.com/abc-defg-hij"
           className="min-w-0 flex-1"
         />
-        <Button disabled={pending}>{pending ? "…" : "Guardar"}</Button>
+        <Button type="submit" disabled={pending}>{pending ? "…" : "Guardar"}</Button>
       </div>
       {state.error && <p className="text-xs text-destructive">{state.error}</p>}
       {state.message && <p className="text-xs text-sky-700">{state.message}</p>}
