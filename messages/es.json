@@ -154,6 +154,14 @@
     "panelTitle": "Tu inglés, listo para despegar.",
     "linkNotice": "Si estabas confirmando tu cuenta, ya quedó confirmada: iniciá sesión con tu email y contraseña. Si querías cambiar la contraseña, pedí un link nuevo."
   },
+  "installHint": {
+    "title": "Instalá la app en tu iPhone",
+    "step1": "Tocá",
+    "share": "Compartir",
+    "step2": "y después",
+    "addToHome": "Agregar a pantalla de inicio",
+    "dismiss": "Cerrar"
+  },
   "shell": {
     "toAdmin": "Panel admin",
     "toTeacher": "Mis clases"

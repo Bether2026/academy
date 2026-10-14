@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, Cinzel, Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { IosInstallHint } from "@/components/features/ios-install-hint";
 
 const geistSans = Geist({
   variable: "--font-sans",
@@ -23,6 +24,12 @@ const brand = Cinzel({
   weight: ["400", "500", "600"],
 });
 
+// Pantallas de carga de iPhone (public/splash): [ancho, alto, densidad] en puntos CSS
+const IOS_SPLASH: [number, number, number][] = [
+  [440, 956, 3], [430, 932, 3], [428, 926, 3], [420, 912, 3], [414, 896, 3], [414, 896, 2],
+  [414, 736, 3], [402, 874, 3], [393, 852, 3], [390, 844, 3], [375, 812, 3], [375, 667, 2],
+];
+
 export const metadata: Metadata = {
   title: {
     default: "Learning to Fly Academy — Aprendé inglés con profesores reales",
@@ -34,6 +41,10 @@ export const metadata: Metadata = {
     capable: true,
     title: "Learning to Fly",
     statusBarStyle: "black-translucent",
+    startupImage: IOS_SPLASH.map(([w, h, dpr]) => ({
+      url: `/splash/splash-${w * dpr}x${h * dpr}.png`,
+      media: `(device-width: ${w}px) and (device-height: ${h}px) and (-webkit-device-pixel-ratio: ${dpr}) and (orientation: portrait)`,
+    })),
   },
 };
 
@@ -52,7 +63,10 @@ export default function RootLayout({
       lang="es"
       className={`${geistSans.variable} ${geistMono.variable} ${display.variable} ${brand.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        {children}
+        <IosInstallHint />
+      </body>
     </html>
   );
 }
