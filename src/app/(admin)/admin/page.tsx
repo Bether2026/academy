@@ -13,7 +13,13 @@ export default async function AdminDashboard() {
 
   const head = { count: "exact" as const, head: true };
   const results = await Promise.all([
-    supabase.from("students").select("*", head),
+    // alumnos = cuentas con rol alumno (un admin puede tener ficha de alumno de antes)
+    supabase.from("profiles").select("*", head).eq("role", "student"),
+    supabase
+      .from("students")
+      .select("id, profiles!inner(role)", head)
+      .eq("onboarding_completed", true)
+      .eq("profiles.role", "student"),
     supabase.from("teachers").select("*", head).eq("is_active", true),
     supabase
       .from("classes")
@@ -29,11 +35,11 @@ export default async function AdminDashboard() {
       .eq("type", "teacher_change_request")
       .is("read_at", null),
   ]);
-  const [students, teachers, classesToday, classesCompleted, cancelled, activeSubs, unreadNotifs] =
+  const [students, onboarded, teachers, classesToday, classesCompleted, cancelled, activeSubs, unreadNotifs] =
     results.map((r) => r.count ?? 0);
 
   const METRICS = [
-    { label: "Alumnos", value: students },
+    { label: "Alumnos", value: students, note: `${onboarded} completaron el registro` },
     { label: "Profesores activos", value: teachers },
     { label: "Clases hoy", value: classesToday },
     { label: "Clases completadas", value: classesCompleted },
@@ -57,13 +63,11 @@ export default async function AdminDashboard() {
             </CardHeader>
             <CardContent>
               <p className="font-heading text-3xl font-bold">{m.value}</p>
+              {"note" in m && <p className="mt-1 text-xs text-muted-foreground">{m.note}</p>}
             </CardContent>
           </Card>
         ))}
       </div>
-      <p className="text-xs text-muted-foreground">
-        Ingresos y retención se habilitan con la integración de pagos (Fase 6).
-      </p>
     </div>
   );
 }

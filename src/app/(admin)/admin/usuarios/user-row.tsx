@@ -68,6 +68,9 @@ export function UserRow({
               <Badge variant="outline">{profile.country}</Badge>
               {isAdmin && teaches && <Badge variant="outline">También da clases</Badge>}
               {student?.current_level && <Badge variant="outline">{student.current_level}</Badge>}
+              {profile.role === "student" && !student && (
+                <Badge variant="outline" className="border-amber-300 text-amber-700">Registro sin completar</Badge>
+              )}
               {student && (
                 <Badge variant={coverage ? "default" : "outline"}>
                   {coverage ? `Plan hasta ${fmtDay(coverage.until)}` : "Sin plan"}
