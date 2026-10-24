@@ -96,7 +96,7 @@ Nota sobre el prompt original: `levels` como tabla se reemplaza por el enum `cef
 | `student_id` | uuid FK → students | |
 | `teacher_id` | uuid FK → teachers | |
 | `scheduled_at` | timestamptz | UTC |
-| `duration_minutes` | int | default 50, check > 0 |
+| `duration_minutes` | int | la app guarda la duración de `policy.ts` (60 min); default de la columna 50 (histórico), check > 0 |
 | `status` | class_status | default `'scheduled'` |
 | `meeting_url` | text null | Meet/Zoom |
 | `teacher_notes` | text null | **PRIVADA** — el alumno nunca la ve (RLS por columna vía vista, ver §5) |

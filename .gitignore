@@ -45,3 +45,6 @@ next-env.d.ts
 
 # Copias de seguridad locales (datos personales de alumnos)
 /backups/
+
+# Material propio de la academia (repo público: no se sube)
+/materiales-propios/

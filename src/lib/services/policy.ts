@@ -10,5 +10,5 @@ export const CLASS_POLICY = {
   /** Días hacia adelante que se ofrecen turnos. */
   bookingWindowDays: 14,
   /** Duración estándar de la clase en minutos. */
-  classDurationMinutes: 50,
+  classDurationMinutes: 60,
 } as const;
