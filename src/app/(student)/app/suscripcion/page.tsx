@@ -6,6 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CheckoutForm } from "./checkout-form";
 import { CancelForm } from "./cancel-form";
+import { getTransferAccounts } from "@/lib/services/transfer-accounts";
+import { TransferAccounts } from "@/components/features/transfer-accounts";
 import { formatInTimeZone } from "date-fns-tz";
 import { es } from "date-fns/locale";
 
@@ -47,6 +49,11 @@ export default async function SuscripcionPage({ searchParams }: { searchParams: 
     getPaymentHistory(5),
   ]);
   const plans = subscription ? [] : await getAvailablePlans(country);
+  // planes manuales o sin plan: se paga por transferencia
+  const transferAccounts =
+    !subscription || subscription.provider === "manual"
+      ? await getTransferAccounts(country === "ES" ? "EUR" : "ARS")
+      : [];
 
   const fmtDate = (d: string) =>
     formatInTimeZone(new Date(d), tz, "d 'de' MMMM 'de' yyyy", { locale: es });
@@ -165,6 +172,8 @@ export default async function SuscripcionPage({ searchParams }: { searchParams: 
           <CheckoutForm plans={plans} />
         </div>
       )}
+
+      {transferAccounts.length > 0 && <TransferAccounts accounts={transferAccounts} />}
     </div>
   );
 }

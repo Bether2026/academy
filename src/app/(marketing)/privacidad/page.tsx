@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { t } from "@/lib/i18n";
 
 export const metadata: Metadata = { title: "Política de privacidad" };
 
@@ -30,7 +31,7 @@ export default function PrivacidadPage() {
           <h2 className="mb-2 font-heading text-lg font-semibold text-foreground">Tus derechos</h2>
           <p>
             Podés acceder, corregir o eliminar tus datos escribiendo a
-            hola@learningtofly.academy. Al eliminar tu cuenta, tus datos personales se eliminan o
+            {t.brand.email}. Al eliminar tu cuenta, tus datos personales se eliminan o
             anonimizan según la normativa aplicable.
           </p>
         </section>

@@ -1,5 +1,6 @@
 import { requireRole } from "@/lib/auth/session";
 import { AppShell } from "@/components/features/app-shell";
+import { WhatsAppButton } from "@/components/features/whatsapp-button";
 
 const NAV = [
   { href: "/app", label: "Inicio" },
@@ -17,6 +18,7 @@ export default async function StudentLayout({ children }: { children: React.Reac
   return (
     <AppShell roleLabel="Alumno" home="/app" nav={NAV}>
       {children}
+      <WhatsAppButton />
     </AppShell>
   );
 }

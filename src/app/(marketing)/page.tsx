@@ -265,7 +265,7 @@ export default async function HomePage() {
               size="lg"
               variant="outline"
               className="border-white/20 bg-white/5 text-white backdrop-blur-sm hover:bg-white/10 hover:text-white hover:border-white/35"
-              render={<a href="mailto:hola@learningtofly.academy" />}
+              render={<a href={`mailto:${t.brand.email}`} />}
             >
               {t.contact.cta}
             </Button>

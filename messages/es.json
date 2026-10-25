@@ -1,6 +1,8 @@
 {
   "brand": {
     "name": "Learning to Fly Academy",
+    "email": "contacto@learningtoflyacademy.com",
+    "whatsapp": "5491159129975",
     "tagline": "Aprendé inglés con acompañamiento real, tecnología y un progreso que podés ver."
   },
   "nav": {
@@ -61,7 +63,9 @@
   "contact": {
     "title": "¿Hablamos?",
     "body": "Si tenés dudas antes de empezar, escribinos y te respondemos en el día.",
-    "cta": "Escribinos"
+    "cta": "Escribinos",
+    "whatsappLabel": "Escribinos por WhatsApp",
+    "whatsappMessage": "¡Hola! Quiero hacer una consulta sobre Learning to Fly Academy."
   },
   "footer": {
     "rights": "Todos los derechos reservados.",
@@ -203,6 +207,27 @@
     "notes": "Notas internas",
     "save": "Guardar",
     "consumerDefense": "Defensa de las y los consumidores. Para reclamos ingrese aquí"
+  },
+  "transfer": {
+    "title": "Pagar por transferencia",
+    "intro": "Transferí el importe de tu plan a cualquiera de estas cuentas.",
+    "receipt": "Después enviá el comprobante a {email} con tu nombre y el plan elegido. Activamos tu plan dentro de las 24 h hábiles.",
+    "copy": "Copiar",
+    "copied": "Copiado",
+    "adminTitle": "Cuentas para transferencias",
+    "adminSubtitle": "Las ven solo los alumnos con sesión iniciada, en la página Mi suscripción, según su moneda. Al recibir un pago, activá el plan desde Usuarios.",
+    "label": "Nombre",
+    "labelPlaceholder": "Ej. Mercado Pago",
+    "currency": "Moneda",
+    "details": "Datos de la cuenta",
+    "detailsPlaceholder": "Titular, alias, CBU/CVU o IBAN, BIC…",
+    "position": "Orden",
+    "active": "Visible",
+    "hidden": "Oculta",
+    "save": "Guardar",
+    "add": "Agregar cuenta",
+    "delete": "Eliminar",
+    "empty": "Todavía no hay cuentas cargadas."
   },
   "installHint": {
     "title": "Instalá la app en tu iPhone",

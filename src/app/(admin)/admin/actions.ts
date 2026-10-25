@@ -9,6 +9,8 @@ import { notifyTeacherAssigned } from "@/lib/services/notifications";
 import { endManualPlan, grantManualMonth } from "@/lib/services/subscriptions";
 import { updateWithdrawal } from "@/lib/services/withdrawals";
 import { withdrawalUpdateSchema } from "@/lib/validators/withdrawal";
+import { deleteTransferAccount, saveTransferAccount } from "@/lib/services/transfer-accounts";
+import { transferAccountSchema } from "@/lib/validators/transfer-account";
 
 export type ActionState = { error?: string; message?: string };
 
@@ -163,4 +165,25 @@ export async function updateWithdrawalAction(_prev: ActionState, formData: FormD
   revalidatePath("/admin/arrepentimientos");
   revalidatePath("/admin");
   return { message: "Guardado." };
+}
+
+export async function saveTransferAccountAction(_prev: ActionState, formData: FormData): Promise<ActionState> {
+  await requireRole("admin", "super_admin");
+  const parsed = transferAccountSchema.safeParse(Object.fromEntries(formData));
+  if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Datos inválidos." };
+
+  const { isActive, ...rest } = parsed.data;
+  if (!(await saveTransferAccount({ ...rest, is_active: isActive }))) return { error: "No se pudo guardar." };
+  revalidatePath("/admin/planes");
+  revalidatePath("/app/suscripcion");
+  return { message: "Guardado." };
+}
+
+export async function deleteTransferAccountAction(_prev: ActionState, formData: FormData): Promise<ActionState> {
+  await requireRole("admin", "super_admin");
+  const id = z.string().uuid().safeParse(formData.get("id"));
+  if (!id.success || !(await deleteTransferAccount(id.data))) return { error: "No se pudo eliminar." };
+  revalidatePath("/admin/planes");
+  revalidatePath("/app/suscripcion");
+  return { message: "Eliminada." };
 }
