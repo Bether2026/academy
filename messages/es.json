@@ -154,6 +154,25 @@
     "panelTitle": "Tu inglés, listo para despegar.",
     "linkNotice": "Si estabas confirmando tu cuenta, ya quedó confirmada: iniciá sesión con tu email y contraseña. Si querías cambiar la contraseña, pedí un link nuevo."
   },
+  "materials": {
+    "title": "Biblioteca de materiales",
+    "subtitle": "Material de la academia por nivel y unidad. Las guías del profesor son solo para profesores; el material del alumno lo ven únicamente los alumnos con los que lo compartas.",
+    "syllabus": "Programa del curso",
+    "unit": "Unidad",
+    "studentBook": "Material del alumno",
+    "teacherGuide": "Guía del profesor",
+    "open": "Abrir",
+    "share": "Compartir",
+    "sharedWith": "Compartido con",
+    "notShared": "Todavía no está compartido con nadie.",
+    "wholeLevel": "Todo el nivel",
+    "chooseTarget": "Elegí con quién compartir…",
+    "remove": "Quitar",
+    "empty": "Todavía no hay materiales en este nivel.",
+    "studentTitle": "Materiales",
+    "studentSubtitle": "El material que te compartió tu profesor.",
+    "studentEmpty": "Tu profesor todavía no te compartió materiales. Cuando lo haga, los vas a ver acá."
+  },
   "installHint": {
     "title": "Instalá la app en tu iPhone",
     "step1": "Tocá",

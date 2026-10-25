@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Material didáctico y su generador (no es código de la app; no se versiona)
+    "materiales-propios/**",
   ]),
 ]);
 

@@ -1,72 +1,49 @@
 import type { Metadata } from "next";
 import { requireRole } from "@/lib/auth/session";
-import { createClient } from "@/lib/supabase/server";
 import { requireOnboardedStudent } from "@/lib/services/students";
+import { getMyMaterials } from "@/lib/services/materials";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
+import { t } from "@/lib/i18n";
 
 export const metadata: Metadata = { title: "Materiales" };
 
-const TYPE_LABEL: Record<string, string> = {
-  document: "Documento",
-  video: "Video",
-  audio: "Audio",
-  link: "Enlace",
-  exercise: "Ejercicio",
-};
-
 export default async function MaterialsPage() {
   await requireRole("student");
-  const student = await requireOnboardedStudent();
-  const supabase = await createClient();
-
-  let query = supabase
-    .from("learning_materials")
-    .select("id, title, description, type, url, level")
-    .eq("is_published", true)
-    .order("created_at", { ascending: false });
-  if (student.current_level) {
-    query = query.or(`level.eq.${student.current_level},level.is.null`);
-  }
-  const { data: materials } = await query;
+  await requireOnboardedStudent();
+  const materials = await getMyMaterials();
+  const m = t.materials;
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-heading text-2xl font-bold">Materiales</h1>
-        <p className="text-sm text-muted-foreground">
-          Recursos para tu nivel{student.current_level ? ` (${student.current_level})` : ""}.
-        </p>
+        <h1 className="font-heading text-2xl font-bold">{m.studentTitle}</h1>
+        <p className="text-sm text-muted-foreground">{m.studentSubtitle}</p>
       </div>
-      {materials?.length ? (
+      {materials.length ? (
         <div className="grid gap-3 sm:grid-cols-2">
-          {materials.map((m) => (
-            <Card key={m.id}>
+          {materials.map((x) => (
+            <Card key={x.id}>
               <CardContent className="space-y-2 py-4">
                 <div className="flex items-center gap-2">
-                  <Badge variant="secondary">{TYPE_LABEL[m.type] ?? m.type}</Badge>
-                  {m.level && <Badge variant="outline">{m.level}</Badge>}
+                  {x.level && <Badge variant="outline">{x.level}</Badge>}
+                  <Badge variant="secondary">{x.unit ? `${m.unit} ${x.unit}` : m.syllabus}</Badge>
                 </div>
-                <p className="font-medium">{m.title}</p>
-                {m.description && (
-                  <p className="text-sm text-muted-foreground">{m.description}</p>
-                )}
+                <p className="font-medium">{x.title.replace(/ — .*$/, "")}</p>
                 <a
-                  href={m.url}
+                  href={`/api/materiales/${x.id}`}
                   target="_blank"
                   rel="noreferrer"
                   className="inline-block text-sm font-medium text-sky-700 underline"
                 >
-                  Abrir material
+                  {m.open}
                 </a>
               </CardContent>
             </Card>
           ))}
         </div>
       ) : (
-        <p className="text-sm text-muted-foreground">
-          Todavía no hay materiales publicados para tu nivel.
-        </p>
+        <p className="text-sm text-muted-foreground">{m.studentEmpty}</p>
       )}
     </div>
   );
