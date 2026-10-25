@@ -7,6 +7,8 @@ import { requireRole } from "@/lib/auth/session";
 import { createClient } from "@/lib/supabase/server";
 import { notifyTeacherAssigned } from "@/lib/services/notifications";
 import { endManualPlan, grantManualMonth } from "@/lib/services/subscriptions";
+import { updateWithdrawal } from "@/lib/services/withdrawals";
+import { withdrawalUpdateSchema } from "@/lib/validators/withdrawal";
 
 export type ActionState = { error?: string; message?: string };
 
@@ -150,4 +152,15 @@ export async function setTeaches(_prev: ActionState, formData: FormData): Promis
       ? "Listo: ya tiene panel de profesor (botón \"Mis clases\" arriba)."
       : "Ya no figura como profesor. Sus clases anteriores se conservan.",
   };
+}
+
+export async function updateWithdrawalAction(_prev: ActionState, formData: FormData): Promise<ActionState> {
+  const { user } = await requireRole("admin", "super_admin");
+  const parsed = withdrawalUpdateSchema.safeParse(Object.fromEntries(formData));
+  if (!parsed.success) return { error: "Datos inválidos." };
+
+  if (!(await updateWithdrawal({ ...parsed.data, adminId: user.id }))) return { error: "No se pudo guardar." };
+  revalidatePath("/admin/arrepentimientos");
+  revalidatePath("/admin");
+  return { message: "Guardado." };
 }

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { requireRole } from "@/lib/auth/session";
 import { createClient } from "@/lib/supabase/server";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -34,8 +35,9 @@ export default async function AdminDashboard() {
       .select("*", head)
       .eq("type", "teacher_change_request")
       .is("read_at", null),
+    supabase.from("withdrawal_requests").select("*", head).eq("status", "pending"),
   ]);
-  const [students, onboarded, teachers, classesToday, classesCompleted, cancelled, activeSubs, unreadNotifs] =
+  const [students, onboarded, teachers, classesToday, classesCompleted, cancelled, activeSubs, unreadNotifs, pendingWithdrawals] =
     results.map((r) => r.count ?? 0);
 
   const METRICS = [
@@ -50,6 +52,11 @@ export default async function AdminDashboard() {
   return (
     <div className="space-y-6">
       <h1 className="font-heading text-2xl font-bold">Métricas</h1>
+      {pendingWithdrawals > 0 && (
+        <Link href="/admin/arrepentimientos" className="block rounded-lg border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-900">
+          ⚠️ {pendingWithdrawals} solicitud(es) de arrepentimiento pendiente(s). Hay que responder dentro de las 24 horas.
+        </Link>
+      )}
       {unreadNotifs > 0 && (
         <p className="rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">
           ⚠️ {unreadNotifs} solicitud(es) de cambio de profesor sin atender.

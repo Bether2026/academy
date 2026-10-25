@@ -1,4 +1,5 @@
 import { requireRole } from "@/lib/auth/session";
+import { t } from "@/lib/i18n";
 import { createClient } from "@/lib/supabase/server";
 import { getActiveSubscription, getPaymentHistory, getAvailablePlans } from "@/lib/services/subscriptions";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -125,6 +126,11 @@ export default async function SuscripcionPage({ searchParams }: { searchParams: 
               )}
             </CardContent>
           </Card>
+
+          <p className="text-xs text-muted-foreground">
+            ¿Contrataste hace menos de 10 días y te arrepentiste?{" "}
+            <a href="/arrepentimiento" className="font-medium text-sky-700 underline">{t.withdrawal.link}</a>
+          </p>
 
           {payments.length > 0 && (
             <Card>

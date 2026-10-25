@@ -32,7 +32,7 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
               <Link
                 key={item.href}
                 href={item.href}
-                className="text-white/65 transition-colors hover:text-white"
+                className="whitespace-nowrap text-white/65 transition-colors hover:text-white"
               >
                 {item.label}
               </Link>
@@ -94,6 +94,21 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
             <Link href="/cancelacion" className="block text-white/45 transition-colors hover:text-white/75">
               {t.footer.cancellation}
             </Link>
+            {/* Res. SCI 424/2020: acceso destacado y directo desde la home */}
+            <Link
+              href="/arrepentimiento"
+              className="mt-3 inline-block rounded-lg border border-amber-400/60 px-3 py-1.5 font-semibold text-amber-300 transition-colors hover:bg-amber-400/10"
+            >
+              {t.withdrawal.link}
+            </Link>
+            <a
+              href="https://www.argentina.gob.ar/produccion/defensadelconsumidor/formulario"
+              target="_blank"
+              rel="noreferrer"
+              className="block pt-1 text-xs text-white/45 underline transition-colors hover:text-white/75"
+            >
+              {t.withdrawal.consumerDefense}
+            </a>
           </nav>
         </div>
         <div className="border-t border-white/10">
