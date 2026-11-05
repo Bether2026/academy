@@ -173,8 +173,10 @@ export async function saveTransferAccountAction(_prev: ActionState, formData: Fo
   const parsed = transferAccountSchema.safeParse(Object.fromEntries(formData));
   if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Datos inválidos." };
 
-  const { isActive, ...rest } = parsed.data;
-  if (!(await saveTransferAccount({ ...rest, is_active: isActive }))) return { error: "No se pudo guardar." };
+  const { isActive, payUrl, ...rest } = parsed.data;
+  if (!(await saveTransferAccount({ ...rest, pay_url: payUrl, is_active: isActive }))) {
+    return { error: "No se pudo guardar." };
+  }
   revalidatePath("/admin/planes");
   revalidatePath("/app/suscripcion");
   return { message: "Guardado." };

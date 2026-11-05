@@ -49,8 +49,12 @@ export function TransferAccountForm({ account }: { account?: TransferAccount }) 
             </div>
           </div>
           <div className="space-y-1">
+            <label className="text-xs font-medium">{m.payUrl}</label>
+            <Input name="payUrl" type="url" defaultValue={account?.pay_url ?? ""} placeholder="https://" />
+          </div>
+          <div className="space-y-1">
             <label className="text-xs font-medium">{m.details}</label>
-            <Textarea name="details" rows={4} defaultValue={account?.details} placeholder={m.detailsPlaceholder} required />
+            <Textarea name="details" rows={4} defaultValue={account?.details} placeholder={m.detailsPlaceholder} />
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <Button type="submit" size="sm" disabled={pending}>

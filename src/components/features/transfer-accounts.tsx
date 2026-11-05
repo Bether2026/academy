@@ -1,25 +1,13 @@
-"use client";
-
-import { useState } from "react";
+import { ExternalLink, Landmark } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { t } from "@/lib/i18n";
-import type { TransferAccount } from "@/lib/services/transfer-accounts";
+import type { PaymentMethod } from "@/lib/services/transfer-accounts";
 
-/** Datos para pagar por transferencia (alumno). */
-export function TransferAccounts({ accounts }: { accounts: TransferAccount[] }) {
-  const [copied, setCopied] = useState<string | null>(null);
+/** Medios de pago (alumno): sin datos bancarios; se piden por WhatsApp. */
+export function TransferAccounts({ methods }: { methods: PaymentMethod[] }) {
   const m = t.transfer;
-
-  async function copy(a: TransferAccount) {
-    try {
-      await navigator.clipboard.writeText(a.details);
-      setCopied(a.id);
-      setTimeout(() => setCopied(null), 2000);
-    } catch {
-      // sin permiso de portapapeles: el texto igual se puede seleccionar a mano
-    }
-  }
+  const whatsapp = `https://wa.me/${t.brand.whatsapp}?text=${encodeURIComponent(m.whatsappMessage)}`;
 
   return (
     <Card>
@@ -27,23 +15,36 @@ export function TransferAccounts({ accounts }: { accounts: TransferAccount[] }) 
         <CardTitle className="text-base">{m.title}</CardTitle>
         <p className="text-sm text-muted-foreground">{m.intro}</p>
       </CardHeader>
-      <CardContent className="space-y-3 text-sm">
-        {accounts.map((a) => (
-          <div key={a.id} className="rounded-lg border p-3">
-            <div className="mb-1 flex items-center justify-between gap-2">
-              <p className="font-semibold">{a.label}</p>
-              <Button variant="outline" size="sm" onClick={() => copy(a)}>
-                {copied === a.id ? m.copied : m.copy}
+      <CardContent className="space-y-4 text-sm">
+        <div className="flex flex-wrap gap-2">
+          {methods.map((pm) =>
+            pm.pay_url ? (
+              <Button
+                key={pm.id}
+                variant="outline"
+                size="sm"
+                nativeButton={false}
+                render={<a href={pm.pay_url} target="_blank" rel="noreferrer" />}
+              >
+                <ExternalLink className="size-4" />
+                {m.payWith.replace("{method}", pm.label)}
               </Button>
-            </div>
-            <p className="whitespace-pre-wrap break-all font-mono text-xs text-muted-foreground select-all">
-              {a.details}
-            </p>
-          </div>
-        ))}
-        <p className="text-xs text-muted-foreground">
-          {m.receipt.replace("{email}", t.brand.email)}
-        </p>
+            ) : (
+              <span key={pm.id} className="inline-flex items-center gap-1.5 rounded-full border px-3 py-1 font-medium">
+                <Landmark className="size-4 text-muted-foreground" />
+                {pm.label}
+              </span>
+            ),
+          )}
+        </div>
+        <Button
+          className="w-full bg-[#25D366] text-white hover:bg-[#1ebe5b] sm:w-auto"
+          nativeButton={false}
+          render={<a href={whatsapp} target="_blank" rel="noreferrer" />}
+        >
+          {m.askData}
+        </Button>
+        <p className="text-xs text-muted-foreground">{m.receipt.replace("{email}", t.brand.email)}</p>
       </CardContent>
     </Card>
   );
