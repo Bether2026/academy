@@ -1,26 +1,21 @@
 import type { MetadataRoute } from "next";
+import { SITE_URL } from "@/lib/seo";
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://www.learningtoflyacademy.com";
-
+/** Solo páginas públicas e indexables. */
 export default function sitemap(): MetadataRoute.Sitemap {
+  const page = (
+    path: string,
+    priority: number,
+    changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"],
+  ) => ({ url: `${SITE_URL}${path}`, lastModified: new Date(), changeFrequency, priority });
+
   return [
-    {
-      url: APP_URL,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 1,
-    },
-    {
-      url: `${APP_URL}/auth/login`,
-      lastModified: new Date(),
-      changeFrequency: "yearly",
-      priority: 0.3,
-    },
-    {
-      url: `${APP_URL}/auth/register`,
-      lastModified: new Date(),
-      changeFrequency: "yearly",
-      priority: 0.5,
-    },
+    page("", 1, "weekly"),
+    page("/register", 0.6, "yearly"),
+    page("/login", 0.3, "yearly"),
+    page("/terminos", 0.2, "yearly"),
+    page("/privacidad", 0.2, "yearly"),
+    page("/cancelacion", 0.2, "yearly"),
+    page("/arrepentimiento", 0.2, "yearly"),
   ];
 }

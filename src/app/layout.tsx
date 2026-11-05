@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, Cinzel, Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { IosInstallHint } from "@/components/features/ios-install-hint";
+import { t } from "@/lib/i18n";
+import { SITE_URL } from "@/lib/seo";
 
 const geistSans = Geist({
   variable: "--font-sans",
@@ -31,12 +33,28 @@ const IOS_SPLASH: [number, number, number][] = [
 ];
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "Learning to Fly Academy — Aprendé inglés con profesores reales",
-    template: "%s · Learning to Fly Academy",
+    default: `${t.seo.title} | ${t.brand.name}`,
+    template: `%s · ${t.brand.name}`,
   },
-  description:
-    "Clases individuales de inglés online con profesores reales, seguimiento personalizado y progreso que podés ver. Para Argentina y España.",
+  description: t.seo.description,
+  applicationName: t.brand.name,
+  category: "education",
+  openGraph: {
+    type: "website",
+    siteName: t.brand.name,
+    locale: "es_AR",
+    alternateLocale: ["es_ES"],
+    title: t.seo.title,
+    description: t.seo.description,
+  },
+  twitter: { card: "summary_large_image", title: t.seo.title, description: t.seo.description },
+  robots: { index: true, follow: true },
+  // Código de Google Search Console (opcional, método "etiqueta HTML")
+  verification: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
+    ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }
+    : undefined,
   appleWebApp: {
     capable: true,
     title: "Learning to Fly",

@@ -1,16 +1,17 @@
 import type { MetadataRoute } from "next";
-
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://www.learningtoflyacademy.com";
+import { SITE_URL } from "@/lib/seo";
 
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
       {
         userAgent: "*",
-        allow: ["/", "/auth/login", "/auth/register"],
-        disallow: ["/app/", "/api/", "/admin/", "/teacher/"],
+        allow: "/",
+        // con barra final: "/app" a secas también bloquearía /apple-icon.png
+        disallow: ["/app/", "/teacher/", "/admin/", "/api/", "/auth/", "/forgot-password", "/reset-password"],
       },
     ],
-    sitemap: `${APP_URL}/sitemap.xml`,
+    sitemap: `${SITE_URL}/sitemap.xml`,
+    host: SITE_URL,
   };
 }

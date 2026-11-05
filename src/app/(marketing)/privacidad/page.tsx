@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import { t } from "@/lib/i18n";
 
-export const metadata: Metadata = { title: "Política de privacidad" };
+export const metadata: Metadata = {
+  title: "Política de privacidad",
+  description: t.seo.privacy,
+  alternates: { canonical: "/privacidad" },
+};
 
 export default function PrivacidadPage() {
   return (

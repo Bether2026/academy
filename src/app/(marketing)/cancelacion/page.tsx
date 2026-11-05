@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
+import { t } from "@/lib/i18n";
 
-export const metadata: Metadata = { title: "Política de cancelación" };
+export const metadata: Metadata = {
+  title: "Política de cancelación",
+  description: t.seo.cancellation,
+  alternates: { canonical: "/cancelacion" },
+};
 
 export default function CancelacionPage() {
   return (

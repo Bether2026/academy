@@ -2,7 +2,11 @@ import type { Metadata } from "next";
 import { t } from "@/lib/i18n";
 import { WithdrawalForm } from "./withdrawal-form";
 
-export const metadata: Metadata = { title: "Botón de arrepentimiento" };
+export const metadata: Metadata = {
+  title: "Botón de arrepentimiento",
+  description: t.seo.withdrawal,
+  alternates: { canonical: "/arrepentimiento" },
+};
 
 export default function ArrepentimientoPage() {
   const m = t.withdrawal;

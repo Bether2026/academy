@@ -1,4 +1,14 @@
 {
+  "seo": {
+    "title": "Clases de inglés online con profesores reales",
+    "description": "Clases individuales de inglés online por videollamada con profesores reales. Niveles A1 a C1, preparación de exámenes (IELTS, Cambridge, APTIS) e inglés para chicos. Para Argentina y España.",
+    "terms": "Condiciones de uso de Learning to Fly Academy: planes, pagos, clases y responsabilidades.",
+    "privacy": "Cómo Learning to Fly Academy protege y usa tus datos personales, y cómo ejercer tus derechos.",
+    "cancellation": "Cómo reservar, cancelar y reprogramar tus clases de inglés en Learning to Fly Academy.",
+    "withdrawal": "Revocá tu contratación dentro de los 10 días, sin costo y sin iniciar sesión.",
+    "login": "Ingresá a tu cuenta de Learning to Fly Academy para ver tus clases, materiales y progreso.",
+    "register": "Creá tu cuenta y empezá tus clases individuales de inglés online con profesores reales."
+  },
   "brand": {
     "name": "Learning to Fly Academy",
     "email": "contacto@learningtoflyacademy.com",

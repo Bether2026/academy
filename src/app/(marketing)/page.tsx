@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -10,6 +11,7 @@ import {
 } from "@/components/ui/accordion";
 import { t } from "@/lib/i18n";
 import { getPublicPlans } from "@/lib/services/plans";
+import { homeJsonLd } from "@/lib/seo";
 import { PlansExplorer } from "@/components/features/plans-explorer";
 
 function AnimatedFlightPath() {
@@ -43,11 +45,18 @@ function AnimatedFlightPath() {
   );
 }
 
+export const metadata: Metadata = { alternates: { canonical: "/" } };
+
 export default async function HomePage() {
   const plans = await getPublicPlans();
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        // contenido propio y estático (sin datos de usuarios); "<" escapado por seguridad
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(homeJsonLd()).replace(/</g, "\\u003c") }}
+      />
       {/* ── HERO ─────────────────────────────────────────────────── */}
       <section className="relative flex min-h-[88vh] items-center overflow-hidden"
         style={{ background: "oklch(0.17 0.065 265)" }}>

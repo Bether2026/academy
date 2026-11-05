@@ -1,6 +1,11 @@
 import { requireRole } from "@/lib/auth/session";
 import { AppShell } from "@/components/features/app-shell";
 import { WhatsAppButton } from "@/components/features/whatsapp-button";
+import type { Metadata } from "next";
+import { NO_INDEX } from "@/lib/seo";
+
+// Área privada: fuera de los buscadores
+export const metadata: Metadata = { robots: NO_INDEX };
 
 const NAV = [
   { href: "/app", label: "Inicio" },

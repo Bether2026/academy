@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { SITE_URL } from "@/lib/seo";
 
 const PROTECTED: Array<{ prefix: string; roles: string[] }> = [
   { prefix: "/app", roles: ["student"] },
@@ -19,6 +20,18 @@ const ROLE_HOME: Record<string, string> = {
  * La seguridad real está en requireRole() (servidor) y RLS (base de datos).
  */
 export async function proxy(request: NextRequest) {
+  // Producción servida en *.vercel.app → dominio propio (SEO: un solo sitio).
+  // /api (cron, webhooks) y /auth (links de email con su cookie) se quedan donde llegaron.
+  const { host } = request.nextUrl;
+  if (
+    process.env.VERCEL_ENV === "production" &&
+    host.endsWith(".vercel.app") &&
+    !/^\/(api|auth)\//.test(request.nextUrl.pathname)
+  ) {
+    const target = new URL(request.nextUrl.pathname + request.nextUrl.search, SITE_URL);
+    if (target.host !== host) return NextResponse.redirect(target, 308);
+  }
+
   // Link de email que cayó en la home (Site URL de Supabase): completarlo en el callback
   const code = request.nextUrl.searchParams.get("code");
   if (request.nextUrl.pathname === "/" && code) {

@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
+import { t } from "@/lib/i18n";
 
-export const metadata: Metadata = { title: "Términos y condiciones" };
+export const metadata: Metadata = {
+  title: "Términos y condiciones",
+  description: t.seo.terms,
+  alternates: { canonical: "/terminos" },
+};
 
 export default function TerminosPage() {
   return (
