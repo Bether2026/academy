@@ -1,7 +1,15 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import { assignTeacher, endPlan, grantPlan, setTeaches, setUserRole, type ActionState } from "../actions";
+import {
+  assignTeacher,
+  confirmEmailAction,
+  endPlan,
+  grantPlan,
+  setTeaches,
+  setUserRole,
+  type ActionState,
+} from "../actions";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -38,6 +46,7 @@ export function UserRow({
   plans,
   coverage,
   teaches,
+  unconfirmed,
 }: {
   profile: Profile;
   student: Student | null;
@@ -45,12 +54,14 @@ export function UserRow({
   plans: PlanOption[];
   coverage: Coverage | null;
   teaches: boolean;
+  unconfirmed: boolean;
 }) {
   const [roleState, roleAction, rolePending] = useActionState<ActionState, FormData>(setUserRole, {});
   const [assignState, assignAction, assignPending] = useActionState<ActionState, FormData>(assignTeacher, {});
   const [grantState, grantAction, grantPending] = useActionState<ActionState, FormData>(grantPlan, {});
   const [endState, endAction, endPending] = useActionState<ActionState, FormData>(endPlan, {});
   const [teachState, teachAction, teachPending] = useActionState<ActionState, FormData>(setTeaches, {});
+  const [confirmState, confirmAction, confirmPending] = useActionState<ActionState, FormData>(confirmEmailAction, {});
   const [open, setOpen] = useState(false);
   const isAdmin = profile.role === "admin" || profile.role === "super_admin";
 
@@ -68,6 +79,9 @@ export function UserRow({
               <Badge variant="outline">{profile.country}</Badge>
               {isAdmin && teaches && <Badge variant="outline">También da clases</Badge>}
               {student?.current_level && <Badge variant="outline">{student.current_level}</Badge>}
+              {unconfirmed && (
+                <Badge variant="outline" className="border-red-300 text-red-700">Email sin confirmar</Badge>
+              )}
               {profile.role === "student" && !student && (
                 <Badge variant="outline" className="border-amber-300 text-amber-700">Registro sin completar</Badge>
               )}
@@ -85,6 +99,19 @@ export function UserRow({
 
         {open && (
           <div className="flex flex-wrap gap-6 rounded-lg bg-muted/50 p-3">
+            {unconfirmed && (
+              <form action={confirmAction} className="flex w-full flex-wrap items-center gap-2">
+                <input type="hidden" name="profileId" value={profile.id} />
+                <span className="text-xs">
+                  No confirmó su email, por eso no puede iniciar sesión. Si el correo no le llega, confirmalo vos.
+                </span>
+                <Button type="submit" size="sm" variant="outline" disabled={confirmPending}>
+                  Confirmar email
+                </Button>
+                {confirmState.error && <p className="text-xs text-destructive">{confirmState.error}</p>}
+                {confirmState.message && <p className="text-xs text-sky-700">{confirmState.message}</p>}
+              </form>
+            )}
             {isAdmin && (
               <form action={teachAction} className="flex w-full flex-wrap items-center gap-2">
                 <input type="hidden" name="profileId" value={profile.id} />

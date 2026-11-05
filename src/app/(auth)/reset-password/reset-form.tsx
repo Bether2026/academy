@@ -4,7 +4,7 @@ import { useActionState } from "react";
 import { resetPassword, type AuthState } from "../actions";
 import { t } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Label } from "@/components/ui/label";
 
 export function ResetPasswordForm() {
@@ -18,7 +18,7 @@ export function ResetPasswordForm() {
       </div>
       <div className="space-y-2">
         <Label htmlFor="password">{t.auth.password}</Label>
-        <Input id="password" name="password" type="password" autoComplete="new-password" minLength={8} required />
+        <PasswordInput id="password" name="password" autoComplete="new-password" minLength={8} required />
       </div>
       {state.error && <p className="text-sm text-destructive">{state.error}</p>}
       <Button type="submit" className="w-full" disabled={pending}>

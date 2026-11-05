@@ -11,6 +11,7 @@ import { updateWithdrawal } from "@/lib/services/withdrawals";
 import { withdrawalUpdateSchema } from "@/lib/validators/withdrawal";
 import { deleteTransferAccount, saveTransferAccount } from "@/lib/services/transfer-accounts";
 import { transferAccountSchema } from "@/lib/validators/transfer-account";
+import { confirmUserEmail } from "@/lib/services/accounts";
 
 export type ActionState = { error?: string; message?: string };
 
@@ -186,4 +187,12 @@ export async function deleteTransferAccountAction(_prev: ActionState, formData: 
   revalidatePath("/admin/planes");
   revalidatePath("/app/suscripcion");
   return { message: "Eliminada." };
+}
+
+export async function confirmEmailAction(_prev: ActionState, formData: FormData): Promise<ActionState> {
+  await requireRole("admin", "super_admin");
+  const id = z.string().uuid().safeParse(formData.get("profileId"));
+  if (!id.success || !(await confirmUserEmail(id.data))) return { error: "No se pudo confirmar." };
+  revalidatePath("/admin/usuarios");
+  return { message: "Email confirmado: ya puede iniciar sesión." };
 }

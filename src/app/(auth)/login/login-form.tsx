@@ -2,14 +2,16 @@
 
 import Link from "next/link";
 import { useActionState } from "react";
-import { login, type AuthState } from "../actions";
+import { login, resendConfirmation, type AuthState } from "../actions";
 import { t } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Label } from "@/components/ui/label";
 
 export function LoginForm({ next, notice }: { next?: string; notice?: string }) {
   const [state, action, pending] = useActionState<AuthState, FormData>(login, {});
+  const [resendState, resendAction, resending] = useActionState<AuthState, FormData>(resendConfirmation, {});
 
   return (
     <form action={action} className="space-y-4">
@@ -32,9 +34,25 @@ export function LoginForm({ next, notice }: { next?: string; notice?: string }) 
             {t.auth.forgot}
           </Link>
         </div>
-        <Input id="password" name="password" type="password" autoComplete="current-password" required />
+        <PasswordInput id="password" name="password" autoComplete="current-password" required />
       </div>
       {state.error && <p className="text-sm text-destructive">{state.error}</p>}
+      {state.unconfirmedEmail && (
+        <div className="space-y-1">
+          <Button
+            type="submit"
+            variant="outline"
+            className="w-full"
+            formAction={resendAction}
+            formNoValidate
+            disabled={resending}
+          >
+            {t.auth.resendConfirmation}
+          </Button>
+          {resendState.message && <p className="text-sm text-sky-700">{resendState.message}</p>}
+          {resendState.error && <p className="text-sm text-destructive">{resendState.error}</p>}
+        </div>
+      )}
       <Button type="submit" className="w-full" disabled={pending}>
         {pending ? "…" : t.auth.loginCta}
       </Button>

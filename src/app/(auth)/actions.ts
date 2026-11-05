@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { ROLE_HOME, type UserRole } from "@/lib/auth/session";
+import { t } from "@/lib/i18n";
 import {
   COUNTRY_TIMEZONES,
   forgotPasswordSchema,
@@ -11,7 +12,12 @@ import {
   resetPasswordSchema,
 } from "@/lib/validators/auth";
 
-export type AuthState = { error?: string; message?: string };
+export type AuthState = {
+  error?: string;
+  message?: string;
+  /** Email con cuenta sin confirmar: el formulario ofrece reenviar la confirmación. */
+  unconfirmedEmail?: string;
+};
 
 function appUrl(path: string) {
   return `${process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"}${path}`;
@@ -53,11 +59,28 @@ export async function login(_prev: AuthState, formData: FormData): Promise<AuthS
 
   const supabase = await createClient();
   const { data, error } = await supabase.auth.signInWithPassword(parsed.data);
+  // Supabase solo informa "sin confirmar" si la contraseña es correcta: no revela cuentas.
+  if (error?.code === "email_not_confirmed") {
+    return { error: t.auth.notConfirmed, unconfirmedEmail: parsed.data.email };
+  }
   if (error) return { error: "Email o contraseña incorrectos." };
 
   const role = (data.user.app_metadata?.role ?? "student") as UserRole;
   const next = formData.get("next");
   redirect(typeof next === "string" && next.startsWith("/") ? next : (ROLE_HOME[role] ?? "/app"));
+}
+
+export async function resendConfirmation(_prev: AuthState, formData: FormData): Promise<AuthState> {
+  const parsed = forgotPasswordSchema.safeParse(Object.fromEntries(formData));
+  if (!parsed.success) return { error: parsed.error.issues[0].message };
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.resend({
+    type: "signup",
+    email: parsed.data.email,
+    options: { emailRedirectTo: appUrl("/auth/callback?next=/app") },
+  });
+  return error ? { error: t.auth.resendError } : { message: t.auth.resendSent };
 }
 
 export async function forgotPassword(_prev: AuthState, formData: FormData): Promise<AuthState> {

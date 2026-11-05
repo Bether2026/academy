@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { requireRole } from "@/lib/auth/session";
 import { createClient } from "@/lib/supabase/server";
 import { getStudentPlanCoverage } from "@/lib/services/subscriptions";
+import { getUnconfirmedUserIds } from "@/lib/services/accounts";
 import { UserRow } from "./user-row";
 
 export const metadata: Metadata = { title: "Usuarios" };
@@ -10,7 +11,7 @@ export default async function UsersPage() {
   await requireRole("admin", "super_admin");
   const supabase = await createClient();
 
-  const [{ data: profiles }, { data: students }, { data: teachers }, { data: plans }, coverage] = await Promise.all([
+  const [{ data: profiles }, { data: students }, { data: teachers }, { data: plans }, coverage, unconfirmed] = await Promise.all([
     supabase
       .from("profiles")
       .select("id, first_name, last_name, email, role, country, created_at")
@@ -28,6 +29,7 @@ export default async function UsersPage() {
       .order("track")
       .order("sessions_per_week"),
     getStudentPlanCoverage(),
+    getUnconfirmedUserIds(),
   ]);
 
   const studentByProfile = new Map(
@@ -57,6 +59,7 @@ export default async function UsersPage() {
             student={studentByProfile.get(p.id) ?? null}
             teacherOptions={teacherOptions}
             teaches={activeTeacherProfiles.has(p.id)}
+            unconfirmed={unconfirmed.has(p.id)}
             plans={(plans ?? []).filter((pl) => pl.currency.trim() === (p.country === "ES" ? "EUR" : "ARS"))}
             coverage={coverage.get(studentByProfile.get(p.id)?.id ?? "") ?? null}
           />

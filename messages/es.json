@@ -3,6 +3,7 @@
     "name": "Learning to Fly Academy",
     "email": "contacto@learningtoflyacademy.com",
     "whatsapp": "5491159129975",
+    "trustpilot": "https://www.trustpilot.com/evaluate/learningtoflyacademy.com",
     "tagline": "Aprendé inglés con acompañamiento real, tecnología y un progreso que podés ver."
   },
   "nav": {
@@ -72,7 +73,8 @@
     "legal": "Legales",
     "terms": "Términos y condiciones",
     "privacy": "Privacidad",
-    "cancellation": "Política de cancelación"
+    "cancellation": "Política de cancelación",
+    "review": "★ Dejanos tu opinión en Trustpilot"
   },
   "subscription": {
     "title": "Mi suscripción",
@@ -131,6 +133,12 @@
     "issueDate": "Fecha de emisión"
   },
   "auth": {
+    "showPassword": "Mostrar contraseña",
+    "hidePassword": "Ocultar contraseña",
+    "notConfirmed": "Todavía no confirmaste tu email. Buscá el correo de confirmación en tu bandeja de entrada y en spam/correo no deseado.",
+    "resendConfirmation": "Reenviar email de confirmación",
+    "resendSent": "Listo: te reenviamos el email de confirmación. Revisá también spam.",
+    "resendError": "No pudimos reenviarlo. Esperá un minuto y probá de nuevo.",
     "loginTitle": "Bienvenido de vuelta",
     "loginSubtitle": "Tu próxima clase te espera.",
     "registerTitle": "Creá tu cuenta",

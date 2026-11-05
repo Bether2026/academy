@@ -71,6 +71,14 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
           <div className="space-y-3">
             <Logo dark />
             <p className="max-w-xs text-sm text-white/50">{t.brand.tagline}</p>
+            <a
+              href={t.brand.trustpilot}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-block text-sm font-medium text-emerald-300 transition-colors hover:text-emerald-200"
+            >
+              {t.footer.review}
+            </a>
           </div>
           <nav className="space-y-2 text-sm">
             <p className="font-semibold text-white/80">Navegación</p>
